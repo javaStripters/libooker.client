@@ -4,7 +4,9 @@
         :buttons="navigationButtons"
       />
       <Container>
-        <router-view />
+        <router-view 
+          :userBookings="userBookings"
+        />
       </Container>
     </div>
 </template>
@@ -25,9 +27,27 @@ export default {
         goTo: '/booking/user-reservations',
         text: 'Мои записи'
       },
-    ]
-  }),
+    ],
+    userBookings: [],
 
+  }),
+  methods: {
+    getUserBookings() {
+      fetch(`${this.$store.state.server}/bookings/user/${localStorage.username}`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+        }
+      })
+      .then(res => res.json())
+      .then(res => {
+        this.userBookings = res
+        console.log(this.userBookings)
+      })
+    },
+  },
+  mounted() {
+    this.getUserBookings()
+  },
   components: {
     Navigation,
     Container,

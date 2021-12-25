@@ -18,19 +18,19 @@
         <div class="booking-confirmation__title">
           Подтверждение брони
         </div>
+        <div style="display: flex; column-gap: 8px">
+          <Button 
+            class="booking-confirmation__button" 
+            theme="secondary"
+            :onClick="() => selectedSlots = []"
+          > Отменить все </Button>
+          <Button 
+            class="booking-confirmation__button" 
+            theme="primary"
+            :onClick="() => confirmAllBookings()"
+          > Подтвердить все </Button>
+        </div>
         <div class="booking-confirmation__items">
-          <div style="display: flex; column-gap: 8px">
-            <Button 
-              class="booking-confirmation__button" 
-              theme="secondary"
-              :onClick="() => selectedSlots = []"
-            > Отменить все </Button>
-            <Button 
-              class="booking-confirmation__button" 
-              theme="primary"
-              :onClick="() => confirmAllBookings()"
-            > Подтвердить все </Button>
-          </div>
           <div 
             class="booking-confirmation__item"
             v-for="(slot, index) in selectedSlots"
@@ -47,12 +47,12 @@
               <Button 
                 class="booking-confirmation__button" 
                 theme="secondary"
-                :onClick="() => {}"
+                :onClick="() => {bookSlot(slot.date, slot.range)}"
               > Отменить </Button>
               <Button 
                 class="booking-confirmation__button" 
                 theme="primary"
-                :onClick="() => {}"
+                :onClick="() => {confirmCertainBooking(slot.date, slot.range)}"
               > Подтвердить </Button>
             </div>
           </div>
@@ -115,9 +115,11 @@
 import TimePicker from '@/components/TimePicker.vue'
 import Button from '@/components/Button.vue'
 export default {
+  props: [
+    'userBookings'
+  ],
   data: () => ({
     daysForBooking: [],
-    userBookings: [],
     selectedSlots: []
   }),
   methods: {
@@ -145,18 +147,7 @@ export default {
       }
       
     },
-    getUserBookings() {
-      fetch(`${this.$store.state.server}/bookings/user/${localStorage.username}`, {
-        headers: {
-          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
-        }
-      })
-      .then(res => res.json())
-      .then(res => {
-        this.userBookings = res
-        console.log(this.userBookings)
-      })
-    },
+    
     bookSlot(date, range) {
       if (this.isSelected(date, range)) {
         this.selectedSlots = this.selectedSlots.filter((slot) => {
@@ -211,13 +202,34 @@ export default {
           },
         })
         .then(res => res.json())
-        .then(res => console.log(res))
+        .then(res => {
+          console.log(res)
+          this.bookSlot(slot.date, slot.range)
+          this.getAvailableTimeForBooking()
+          this.getUserBookings()
+        })
       })
     },
+    confirmCertainBooking(date, range) {
+      fetch(`${this.$store.state.server}/bookings?from=${date.toISOString().slice(0, 10)}T${range.from}Z&to=${date.toISOString().slice(0, 10)}T${range.toInclusive}Z`, {
+        method: 'POST',
+        headers: {
+          'Content-type' : 'application/json',
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+        },
+      })
+      .then(res => res.json())
+      .then(res => {
+        this.bookSlot(date, range)
+        console.log(res)
+        this.getAvailableTimeForBooking()
+        this.getUserBookings()
+
+      })
+    }
   },
   mounted() {
     this.getAvailableTimeForBooking()
-    this.getUserBookings()
   },
   components: {
     TimePicker,
