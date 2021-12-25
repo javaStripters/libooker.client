@@ -1,5 +1,8 @@
 <template>
-  <div class="ticket">
+  <div 
+    class="ticket"
+    :class="[type ? `ticket--${type}` : 'ticket--actual']"
+  >
     <div class="ticket__aside">
       {{info.date.slice(8, 10)}}
     </div>
@@ -22,7 +25,7 @@
       <div class="ticket__computer-number-and-address">
         <div>
           <div class="ticket__computer-number">Компьютер № {{info.workplace.name}}</div>
-          <div>2 этаж, компьютерный класс №2</div>
+          <div style="line-height: 16px; font-size: 14px">2 этаж, компьютерный класс №2</div>
         </div>
         <img :src="require('@/assets/computer.svg')" alt="" class="ticket__image">
         <div class="ticket__address">
@@ -30,7 +33,10 @@
           <span>Лиственичная аллея, 2, корп. 1</span>
         </div>
       </div>
-      <div class="ticket__actions">
+      <div 
+        class="ticket__actions"
+        v-if="type === 'actual'"
+      >
         <Button
         class="ticket__button"
         theme="secondary"
@@ -50,7 +56,8 @@
 import Button from '@/components/Button.vue'
 export default {
   props: [
-    'info'
+    'info',
+    'type' /* String: 'actual', 'archived' */
   ],
 
   components: {
@@ -69,8 +76,13 @@ export default {
     grid-template-columns: 50px auto;
     overflow: hidden;
   }
-  .ticket__aside {
+  .ticket--actual .ticket__aside {
     background: #D5DFF7;
+  }
+  .ticket--archived .ticket__aside {
+    background: #B9AC9B;
+  }
+  .ticket__aside {
     border: 1px solid #013B2B;
     display: flex;
     flex-direction: column;
@@ -121,6 +133,7 @@ export default {
   .ticket__computer-number {
     font-weight: 700;
     font-size: 18px;
+    line-height: 22px;
   }
   .ticket__actions {
     display: grid;

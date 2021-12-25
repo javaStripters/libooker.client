@@ -4,6 +4,7 @@
       v-for="(booking, index) in userBookings"
       :key="index"
       :info="booking"
+      type="actual"
     />
   </div>
 </template>
