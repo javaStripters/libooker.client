@@ -38,7 +38,7 @@ export default {
           "from": "12:00:00",
           "toInclusive": "13:30:00"
         },
-        "canceled": true
+        "canceled": false
       },
     ],
   }),

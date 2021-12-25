@@ -1,5 +1,8 @@
 <template>
-  <div class="mini-profile">
+  <div 
+    class="mini-profile"
+    @click="$router.push('/profile')"
+  >
     <div class="mini-profile__avatar">
       
     </div>
@@ -28,6 +31,7 @@ export default {
     display: flex;
     column-gap: 8px;
     color: white;
+    cursor: pointer;
   }
   .mini-profile__avatar {
     height: 40px;

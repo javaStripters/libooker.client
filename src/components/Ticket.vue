@@ -2,6 +2,7 @@
   <div 
     class="ticket"
     :class="[type ? `ticket--${type}` : 'ticket--actual']"
+    v-if="!info.canceled"
   >
     <div class="ticket__aside">
       {{info.date.slice(8, 10)}}
@@ -40,7 +41,7 @@
         <Button
         class="ticket__button"
         theme="secondary"
-        :onClick="() => {}"
+        :onClick="() => removeBooking(info.id)"
         > Отменить </Button>
         <Button
         class="ticket__button"
@@ -59,7 +60,17 @@ export default {
     'info',
     'type' /* String: 'actual', 'archived' */
   ],
-
+  methods: {
+    async removeBooking(id) {
+      await fetch(`${this.$store.state.server}/bookings/${id}`, {
+        method: 'DELETE',
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+        }
+      })
+      this.$emit('getUserBookings')
+    },
+  },
   components: {
     Button,
   }

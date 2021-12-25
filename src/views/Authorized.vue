@@ -1,18 +1,25 @@
 <template>
-  <div>
-    <Header />
-    <Navigation 
-      class="navigation"
-      :buttons="navigationButtons"
-      :theme="'primary'"
+  <div class="authorized">
+    <div>
+      <Header 
+      @openNotification="(type) =>{$emit('openNotification', type)}"
     />
-    <router-view />
+      <Navigation 
+        class="navigation"
+        :buttons="navigationButtons"
+        :theme="'primary'"
+      />
+      <router-view />
+    </div>
+
+    <Footer />
   </div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
 import Navigation from '@/components/Navigation.vue'
+import Footer from '@/components/Footer.vue'
 export default {
   data: () => ({
     navigationButtons: [
@@ -41,12 +48,19 @@ export default {
 
   components: {
     Header,
-    Navigation
+    Navigation,
+    Footer,
   }
 }
 </script>
 
 <style scoped>
+.authorized {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 .navigation {
   height: 48px;
   width: 100%;

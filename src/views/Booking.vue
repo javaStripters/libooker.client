@@ -6,6 +6,7 @@
       <Container>
         <router-view 
           :userBookings="userBookings"
+          @getUserBookings="getUserBookings"
         />
       </Container>
     </div>
@@ -33,7 +34,7 @@ export default {
   }),
   methods: {
     getUserBookings() {
-      fetch(`${this.$store.state.server}/bookings/user/${localStorage.username}`, {
+      fetch(`${this.$store.state.server}/bookings/user`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
         }

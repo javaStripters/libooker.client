@@ -2,8 +2,9 @@
   <div class="header">
     <Container class="header__container">
       <div class="header__logo">
-        <img :src="require('@/assets/three-books.svg')" alt="">
-        <img :src="require('@/assets/site-name.svg')" alt="">
+        <!-- <img :src="require('@/assets/three-books.svg')" alt="">
+        <img :src="require('@/assets/site-name.svg')" alt=""> -->
+        <img :src="require('@/assets/library-logo.svg')" alt="">
       </div>
       <div class="header__user-section">
         
@@ -19,7 +20,7 @@
         </button>
         <button
           class="header__log-out-btn"
-          @click="logOut()"
+          @click="$emit('openNotification', 'confirmExitFromAccount')"
         >
           <img :src="require('@/assets/icons/on-off-icon.svg')" alt="">
         </button>
@@ -34,9 +35,6 @@ import MiniProfile from '@/components/MiniProfile.vue'
 export default {
   
   methods: {
-    logOut() {
-      this.$store.getters.logOut
-    }
   },
   components: {
     Container,
@@ -60,6 +58,9 @@ export default {
   .header__logo {
     display: flex;
     column-gap: 32px;
+  }
+  .header__logo {
+    max-height: 100%;
   }
   .header__user-section {
     display: flex;

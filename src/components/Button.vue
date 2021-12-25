@@ -33,4 +33,8 @@ export default {
     color: #013B2B;
     background: #FFFFFF;
   }
+  .button--danger {
+    background: #A51010;
+    color: white;
+  }
 </style>

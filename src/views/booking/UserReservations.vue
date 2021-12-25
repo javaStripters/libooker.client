@@ -5,6 +5,7 @@
       :key="index"
       :info="booking"
       type="actual"
+      @getUserBookings="$emit('getUserBookings')"
     />
   </div>
 </template>

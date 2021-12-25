@@ -65,7 +65,10 @@
     </div>
 
     <div class="reserving__sessions sessions">
-      <div class="sessions__active">
+      <div 
+        class="sessions__active"
+        v-if="false"
+      >
         <div class="sessions__title">Активная сессия</div>
         <div class="sessions__items">
           <div class="sessions__item">
@@ -97,6 +100,7 @@
               v-if="!booking.canceled"
             >
               <Button
+                class="sessions__item-button"
                 :onClick="() => {removeBooking(booking.id)}"
               > Отменить </Button>
             </div>
@@ -104,6 +108,12 @@
               Вы отменили эту бронь
             </div>
           </div>
+        </div>
+        <div 
+          class=""
+          v-else
+        >
+          Кажется, у Вас нет запланированных броней
         </div>
       </div>
     </div>
@@ -167,13 +177,14 @@ export default {
         })
       }
     },
-    removeBooking(id) {
-      fetch(`${this.$store.state.server}/bookings/${id}`, {
+    async removeBooking(id) {
+      await fetch(`${this.$store.state.server}/bookings/${id}`, {
         method: 'DELETE',
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
         }
       })
+      this.$emit('getUserBookings')
     },
     isSelected(date, interval) {
       for (let i = 0; i < this.selectedSlots.length; i++) {
@@ -206,7 +217,6 @@ export default {
           console.log(res)
           this.bookSlot(slot.date, slot.range)
           this.getAvailableTimeForBooking()
-          this.getUserBookings()
         })
       })
     },
@@ -223,9 +233,12 @@ export default {
         this.bookSlot(date, range)
         console.log(res)
         this.getAvailableTimeForBooking()
-        this.getUserBookings()
-
       })
+    }
+  },
+  watch: {
+    daysForBooking() {
+      this.$emit('getUserBookings')
     }
   },
   mounted() {
@@ -243,7 +256,8 @@ export default {
     display: grid;
     gap: 24px;
     grid-template-columns: auto 330px;
-    grid-template-rows: repeat(2, auto);
+    grid-template-rows: auto 1fr;
+    align-items: start;
   }
   .reserving__time-picker {
     grid-row: 1 / -1;
@@ -267,6 +281,7 @@ export default {
     display: flex;
     flex-direction: column;
     row-gap: 10px;
+    font-size: 14px;
   }
   .sessions__title {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -277,13 +292,22 @@ export default {
   .sessions__items {
     display: flex;
     flex-direction: column;
-    row-gap: 8px;
+    row-gap: 10px;
   }
   .sessions__item {
     background: #FBFBFB;
     box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     padding: 8px 12px;
+    display: grid;
+    grid-template-rows: repeat(3, auto);
+    gap: 10px;
+  }
+  .sessions__item-actions {
+    justify-self: end;
+  }
+  .sessions__item-button {
+    width: 150px;
   }
   .sessions__item-booking-date, .sessions__item-booking-time {
     display: flex;
