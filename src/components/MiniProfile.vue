@@ -6,10 +6,10 @@
     <div class="mini-profile__username">
       {{username}}
     </div>
-    <img 
+    <!-- <img 
       class="mini-profile__dropdown-icon"
       :src="require('@/assets/icons/chevron-down.svg')" 
-    />
+    /> -->
   </div>
 </template>
 
