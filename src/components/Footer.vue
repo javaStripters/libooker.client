@@ -52,8 +52,8 @@ export default {
   margin-top: 50px;
 }
 .footer__container {
-  padding-top: 16px;
-  padding-bottom: 16px;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
   display: grid;
   grid-template-columns: repeat(3, auto) 1fr;
   gap: 100px;
