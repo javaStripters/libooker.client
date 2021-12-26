@@ -137,6 +137,12 @@ const router = new VueRouter({
       next('/unauthorized/login') 
     }
   }
+  if (localStorage.userRole === 'ADMIN' && to.fullPath.indexOf('admin') === -1) {
+    next('/admin/booking/reserving')
+  }
+  if (localStorage.userRole === 'STUDENT' && to.fullPath.indexOf('admin') !== -1) {
+    next('/booking/reserving')
+  }
   //  if (to.fullPath === '/') {
   //    if (!store.state.accessToken) {
   //      next('/unauthorized/login');
