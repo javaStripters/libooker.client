@@ -19,8 +19,7 @@ export default new Vuex.Store({
   getters: {
     logOut: () => {
       console.log('logOuting from store')
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('userRole')
+      localStorage.clear()
       router.push('/unauthorized/login')
     },
     

@@ -66,13 +66,17 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 50px;
+  align-items: center;
 }
 .faq__expansion-panels {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
+.faq__adding-question-form, .faq__expansion-panels {
+  width: 100%;
+  max-width: 1200px;
+}
 
 
 .form {

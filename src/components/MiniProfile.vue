@@ -9,8 +9,8 @@
     <div class="mini-profile__username">
       {{`
         ${$store.state.userInfo.lastname}
-        ${$store.state.userInfo.firstname.slice(0, 1)}.
-        ${$store.state.userInfo.patronymic.slice(0, 1)}.
+        ${$store.state.userInfo.firstname ? $store.state.userInfo.firstname.slice(0, 1) : ''}.
+        ${$store.state.userInfo.patronymic ? $store.state.userInfo.patronymic.slice(0, 1) : ''}.
       `}}
     </div>
     <!-- <img 
