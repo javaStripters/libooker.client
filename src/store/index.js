@@ -11,23 +11,17 @@ export default new Vuex.Store({
     currentDate: (new Date()).toISOString('en-US'),
     accessToken: null,
     tokenHeader: null,
+    userInfo: {}
   },
   mutations: {
   },
   getters: {
-    // getAvailableTimeForBooking: (state) => (date) => {
-    //   console.log('heh')
-    //   fetch(`${state.server}/bookings/available?date=${date}`)
-    //   .then( res => {
-    //     console.log(res.json())
-    //     return res.json()
-    //   })
-    // }
     logOut: () => {
       console.log('logOuting from store')
       localStorage.removeItem('accessToken')
       router.push('/unauthorized/login')
-    }
+    },
+    
   },
   actions: {
     fetchAccessToken: (state) => {

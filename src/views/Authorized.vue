@@ -45,7 +45,22 @@ export default {
       },
     ],
   }),
-
+  methods: {
+    async getUserInfo() {
+      fetch(`${this.$store.state.server}/users`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+        }
+      })
+      .then(res => res.json())
+      .then(res => {
+        this.$store.state.userInfo = res
+      }) 
+    }
+  },
+  mounted() {
+    this.getUserInfo()
+  },
   components: {
     Header,
     Navigation,

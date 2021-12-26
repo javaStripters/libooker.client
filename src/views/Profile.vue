@@ -6,24 +6,31 @@
         
         <div class="profile__main-info">
           <img src="" alt="" class="profile__avatar">
-          <div class="profile__username">{{this.username}}</div>
+          <div class="profile__username">
+            {{`
+              ${$store.state.userInfo.lastname}
+              ${$store.state.userInfo.firstname} 
+              ${$store.state.userInfo.patronymic}
+            `}}
+          </div>
           <div class="profile__stud-number-and-login">
             <div class="profile__stud-number">
               <div>Номер студ. билета:</div>
-              <div>{{}}</div>
+              <div>{{$store.state.userInfo.testbook}}</div>
             </div>
             <div class="profile__login">
               <div>Логин:</div>
               <div>{{this.username}}</div>
             </div>
           </div>
-          <div class="profile__actions">
+          <!-- <div class="profile__actions">
             <Button
               theme="secondary"
+              :onClick="() => {}"
             >
               Редактировать
             </Button>
-          </div>
+          </div> -->
         </div>
 
         <div class="profile__activity-and-statistics">

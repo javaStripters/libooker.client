@@ -7,7 +7,11 @@
       
     </div>
     <div class="mini-profile__username">
-      {{username}}
+      {{`
+        ${$store.state.userInfo.lastname}
+        ${$store.state.userInfo.firstname.slice(0, 1)}.
+        ${$store.state.userInfo.patronymic.slice(0, 1)}.
+      `}}
     </div>
     <!-- <img 
       class="mini-profile__dropdown-icon"
