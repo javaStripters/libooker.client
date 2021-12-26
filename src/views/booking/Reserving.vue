@@ -7,11 +7,13 @@
       :selectedSlots="selectedSlots"
       :isSelected="isSelected"
       @bookSlot="bookSlot"
+      @openDay="(date) => {openDay(date)}"
+      @closeDay="(date) => {closeDay(date)}"
     />
 
     <div 
       class="booking-confirmation"
-      v-if="selectedSlots.length !== 0"
+      v-if="$store.state.userInfo.role === 'STUDENT' && selectedSlots.length !== 0"
     >
       
       <div class="booking-confirmation__content">
@@ -64,7 +66,10 @@
       </div>
     </div>
 
-    <div class="reserving__sessions sessions">
+    <div 
+      class="reserving__sessions sessions"
+      v-if="$store.state.userInfo.role === 'STUDENT'"
+    >
       <div 
         class="sessions__active"
         v-if="false"
@@ -118,19 +123,29 @@
       </div>
     </div>
     
+    <div
+      class="reserving__users-search users-search"
+      v-if="$store.state.userInfo.role === 'ADMIN'"
+    > 
+      <div class="users-search__title">Пользователи</div>
+      <SearchBox />
+    </div>
+
   </div>
 </template>
 
 <script>
 import TimePicker from '@/components/TimePicker.vue'
 import Button from '@/components/Button.vue'
+import SearchBox from '@/components/SearchBox.vue'
 export default {
   props: [
     'userBookings'
   ],
   data: () => ({
     daysForBooking: [],
-    selectedSlots: []
+    selectedSlots: [],
+    usersSearchInput: null
   }),
   methods: {
     getAvailableTimeForBooking() {
@@ -155,9 +170,7 @@ export default {
           }
         })
       }
-      
     },
-    
     bookSlot(date, range) {
       if (this.isSelected(date, range)) {
         this.selectedSlots = this.selectedSlots.filter((slot) => {
@@ -234,7 +247,32 @@ export default {
         console.log(res)
         this.getAvailableTimeForBooking()
       })
-    }
+    },
+    async openDay(date) {
+      await fetch(`${this.$store.state.server}/admin/day-off?date=${date.toISOString().slice(0, 10)}`, {
+        method: 'DELETE',
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+        },
+      })
+      .then( res => {
+        console.log(res)
+        this.getAvailableTimeForBooking()
+      })
+    },
+    closeDay(date) {
+      fetch(`${this.$store.state.server}/admin/day-off?date=${date.toISOString().slice(0, 10)}`, {
+        method: 'POST',
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+        }
+      })
+      .then( res => res.json())
+      .then( res => {
+        console.log(res)
+        this.getAvailableTimeForBooking()
+      })
+    },
   },
   watch: {
     daysForBooking() {
@@ -247,6 +285,7 @@ export default {
   components: {
     TimePicker,
     Button,
+    SearchBox,
   }
 }
 </script>
@@ -283,7 +322,9 @@ export default {
     row-gap: 10px;
     font-size: 14px;
   }
-  .sessions__title {
+  .sessions__title,
+  .booking-confirmation__title,
+  .users-search__title {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-style: normal;
     font-weight: bold;
@@ -325,10 +366,6 @@ export default {
     display: flex;
     flex-direction: column;
     row-gap: 16px;
-  }
-  .booking-confirmation__title {
-    font-size: 18px;
-    font-weight: 700;
   }
   .booking-confirmation__items {
     display: flex;
@@ -372,4 +409,11 @@ export default {
   .booking-confirmation__button {
     width: 100%;
   }
+  .users-search {
+    background: #FFFFFB;
+    box-shadow: 0px 0px 5px rgba(103, 91, 83, 0.5);
+    border-radius: 5px;
+    padding: 8px;
+  }
+
 </style>

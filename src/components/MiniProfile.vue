@@ -1,7 +1,7 @@
 <template>
-  <div 
+  <router-link 
     class="mini-profile"
-    @click="$router.push('/profile')"
+    :to="'/profile'"
   >
     <div class="mini-profile__avatar">
       
@@ -17,7 +17,7 @@
       class="mini-profile__dropdown-icon"
       :src="require('@/assets/icons/chevron-down.svg')" 
     /> -->
-  </div>
+  </router-link>
 </template>
 
 <script>

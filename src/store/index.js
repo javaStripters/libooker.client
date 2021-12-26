@@ -11,7 +11,8 @@ export default new Vuex.Store({
     currentDate: (new Date()).toISOString('en-US'),
     accessToken: null,
     tokenHeader: null,
-    userInfo: {}
+    userRole: null /* String: 'STUDENT', 'ADMIN' */,
+    userInfo: {},
   },
   mutations: {
   },

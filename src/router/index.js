@@ -68,6 +68,57 @@ const routes = [
       } 
     ]
   },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('../views/Authorized.vue'),
+    children: [
+      {
+        path: 'booking',
+        // name: 'Booking',
+        component: () => import('../views/Booking.vue'),
+        children: [
+          {
+            path: 'reserving',
+            // name: 'Reserving',
+            component: () => import('../views/booking/Reserving.vue'),
+          },
+          {
+            path: 'today-reservings',
+            name: 'Today Reservings',
+            component: () => import('../views/booking/TodayReservings.vue'),
+          },
+        ]
+      },
+      {
+        path: 'statistics',
+        name: 'Statistics',
+        component: () => import('../views/Statistics.vue'),
+      },
+      {
+        path: 'users',
+        name: 'Users',
+        component: () => import('../views/Users.vue'),
+        children: [
+          {
+            path: 'students',
+            name: 'Students',
+            component: () => import('../views/users/Students.vue'),
+          },
+          {
+            path: 'tutors',
+            name: 'Tutors',
+            component: () => import('../views/users/Tutors.vue'),
+          },
+        ]
+      },
+      {
+        path: 'faq',
+        // name: 'FAQ',
+        component: () => import('../views/AdminFaq.vue'),
+      }
+    ]
+  },
   // {
   //   path: '*',
   //   redirect: '/booking'

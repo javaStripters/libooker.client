@@ -35,7 +35,7 @@ export default {
 
 <style scoped>
   .navigation {
-    
+    font-size: 16px;
   }
   .navigation__container {
     display: flex;

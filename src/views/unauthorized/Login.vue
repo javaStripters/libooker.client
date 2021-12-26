@@ -17,7 +17,7 @@
         @click="login()"
       >Войти</button>
       <div></div>
-      <router-link to="registration">Зарегистрироваться</router-link>
+      <!-- <router-link to="registration">Зарегистрироваться</router-link> -->
     </Card>
   </div>
 </template>
@@ -49,7 +49,13 @@ export default {
           localStorage.accessToken = res.token
           localStorage.tokenHeader = res.tokenHeader
           localStorage.username = this.username
-          this.$router.push('/booking/reserving')
+          localStorage.userRole = res.role
+          if (localStorage.userRole === 'STUDENT') {
+            this.$router.push('/booking/reserving')
+          }
+          else if (localStorage.userRole === 'ADMIN') {
+            this.$router.push('/admin/booking/reserving')
+          }
         }
         else {
           window.alert('Some problems are occurred')

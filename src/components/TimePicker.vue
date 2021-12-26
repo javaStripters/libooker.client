@@ -6,10 +6,31 @@
       </div>
       <div 
         class="time-picker__date"
+        :id="`date-${day.date.toISOString().slice(0, 10)}`"
         v-for="day in days"
         :key="day.date.toISOString()"
+        @mouseover="hoveredDate = day.date"
+        @mouseleave="hoveredDate = null"
       >
-        {{day.date.toISOString().slice(0, 10)}}
+        <Button
+          class="time-picker__button--admin"
+          v-if="$store.state.userInfo.role === 'ADMIN' && day.date === hoveredDate && day.intervals[0].state !== 'CLOSED'"
+          :onClick="() => $emit('closeDay', day.date)"
+          theme="primary"
+        >
+          Закрыть
+        </Button>
+        <Button
+          class="time-picker__button--admin"
+          v-else-if="$store.state.userInfo.role === 'ADMIN' && day.date === hoveredDate && day.intervals[0].state === 'CLOSED'"
+          :onClick="() => $emit('openDay', day.date)"
+          theme="primary"
+        >
+          Открыть
+        </Button>
+        <div v-else>
+          {{day.date.toISOString().slice(0, 10)}}
+        </div>
       </div>
     </div>  
     <div class="time-picker__horizontal-divider"></div>
@@ -25,8 +46,13 @@
       </div>
       <div 
         class="time-picker__events-col"
+        :class="[
+          day.date == hoveredDate && $store.state.userInfo.role === 'ADMIN' && 'time-picker__events-col--hover'
+        ]"
         v-for="(day, index) in days"
         :key="index"
+        @mouseover="hoveredDate = day.date"
+        @mouseleave="hoveredDate = null"
       >
         <div
           class="time-picker__slot-wrapper"
@@ -57,6 +83,12 @@
           >
             Ваша бронь
           </div>
+          <div 
+            class="time-picker__slot time-picker__slot--closed"
+            v-else-if="interval.state === 'CLOSED'"
+          >
+            Закрыто
+          </div>
         </div>
       </div>
     </div>
@@ -64,15 +96,22 @@
 </template>
 
 <script>
+import Button from '@/components/Button.vue'
 export default {
   props: [
     'days',
     'selectedSlots',
     'isSelected'
   ],
+  data: () => ({
+    hoveredDate: null,
+  }), 
   methods: {
     
   },
+  components: {
+    Button,
+  }
 }
 </script>
 
@@ -91,6 +130,7 @@ export default {
   }
   .time-picker__header {
     background: #675B53;
+    height: 45px;
   }
   .time-picker__header-watch-icon {
     display: flex;
@@ -105,11 +145,23 @@ export default {
     font-size: 18px;
     font-weight: 700;
   }
+  .time-picker__button--admin {
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+  }
   .time-picker__body {
   }
   .time-picker__intervals-col, .time-picker__events-col {
     display: grid;
     grid-auto-rows: 44px;
+    transition: all .3s;
+  }
+  .time-picker__events-col--hover {
+    background: #dddddd;
+    border-radius: 5px;
+    transition: all .3s;
   }
   .time-picker__interval {
     display: flex;
@@ -148,10 +200,18 @@ export default {
   .time-picker__slot--reserved {
     border: 2px solid #E53935;
     color: #E53935;
+    background: #ffffff;
   }
   .time-picker__slot--self-reserved {
     border: 2px solid ;
     border: 2px solid #43A047;
     color: #43A047;
+  }
+  .time-picker__slot--closed {
+    background: rgba(255, 255, 255, 0.85);
+    border: 2px solid #BDBDBD;
+    box-sizing: border-box;
+    border-radius: 8px;
+    color: #BDBDBD;
   }
 </style>

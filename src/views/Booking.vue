@@ -1,7 +1,7 @@
 <template>
     <div class="booking">
       <Navigation 
-        :buttons="navigationButtons"
+        :buttons="userRole === 'ADMIN' ? adminNavigationButtons : navigationButtons"
       />
       <Container>
         <router-view 
@@ -16,6 +16,9 @@
 import Navigation from '@/components/Navigation.vue'
 import Container from '@/components/Container.vue'
 export default {
+  props: [
+    'userRole',
+  ],
   data: () => ({
     navigationButtons: [
       {
@@ -27,6 +30,18 @@ export default {
         name: 'User Reservations',
         goTo: '/booking/user-reservations',
         text: 'Мои записи'
+      },
+    ],
+    adminNavigationButtons: [
+      {
+        name: 'Reserving',
+        goTo: '/admin/booking/reserving',
+        text: 'Резервация'
+      },
+      {
+        name: 'User Reservations',
+        goTo: '/admin/booking/today-reservings',
+        text: 'Записи на сегодня'
       },
     ],
     userBookings: [],

@@ -2,14 +2,16 @@
   <div class="authorized">
     <div>
       <Header 
-      @openNotification="(type) =>{$emit('openNotification', type)}"
-    />
+        @openNotification="(type) =>{$emit('openNotification', type)}"
+      />
       <Navigation 
         class="navigation"
-        :buttons="navigationButtons"
+        :buttons="userRole === 'ADMIN' ? adminNavigationButtons : navigationButtons"
         :theme="'primary'"
       />
-      <router-view />
+      <router-view 
+        :userRole="userRole"
+      />
     </div>
 
     <Footer />
@@ -44,6 +46,28 @@ export default {
         text: 'FAQ'
       },
     ],
+    adminNavigationButtons: [
+      {
+        name: 'Booking',
+        goTo: '/admin/booking/reserving',
+        text: 'Бронирование'
+      },
+      {
+        name: 'Statistics',
+        goTo: '/admin/statistics',
+        text: 'Статистика'
+      },
+      {
+        name: 'Users',
+        goTo: '/admin/users/students',
+        text: 'Пользователи'
+      },
+      {
+        name: 'FAQ',
+        goTo: '/admin/faq',
+        text: 'FAQ'
+      },
+    ]
   }),
   methods: {
     async getUserInfo() {
@@ -55,8 +79,14 @@ export default {
       .then(res => res.json())
       .then(res => {
         this.$store.state.userInfo = res
+        localStorage.userRole = res.role
       }) 
     }
+  },
+  computed: {
+    userRole() {
+      return localStorage.userRole
+    },
   },
   mounted() {
     this.getUserInfo()
