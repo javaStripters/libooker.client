@@ -4,56 +4,14 @@
       <div class="profile__title">Ваш профиль</div>
       <div class="profile__body">
         
-        <div class="profile__main-info">
-          <img src="" alt="" class="profile__avatar">
-          <div 
-            class="mini-profile__username"
-            v-if="userRole === 'STUDENT'"
-          >
-            {{`
-              ${$store.state.userInfo.lastname}
-              ${$store.state.userInfo.firstname ? $store.state.userInfo.firstname.slice(0, 1) : ''}.
-              ${$store.state.userInfo.patronymic ? $store.state.userInfo.patronymic.slice(0, 1) : ''}.
-            `}}
-          </div>
-          <div 
-            class="mini-profile__username"
-            v-else-if="userRole === 'ADMIN'"
-          >
-            Администратор
-          </div>
-          <div class="profile__stud-number-and-login">
-            <div class="profile__stud-number">
-              <div>Номер студ. билета:</div>
-              <div>{{$store.state.userInfo.testbook}}</div>
-            </div>
-            <div class="profile__login">
-              <div>Логин:</div>
-              <div>{{this.username}}</div>
-            </div>
-          </div>
-          <!-- <div class="profile__actions">
-            <Button
-              theme="secondary"
-              :onClick="() => {}"
-            >
-              Редактировать
-            </Button>
-          </div> -->
-        </div>
+        <ProfileMainInfo 
+          class="profile__main-info" 
+          :info="userInfo"
+        />
+          
 
         <div class="profile__activity-and-statistics">
-          <div class="profile__activity">
-            <div class="profile__activity-title">Активность пользователя</div>
-            <div class="profile__activity-grid activity-grid">
-              <div 
-                class="activity-grid__cell"
-                v-for="index in 365"
-                :key="index"
-              >
-              </div>
-            </div>
-          </div>
+          <ActivityGrid />
           <div class="profile__divider"></div>
           <div class="profile__statistics">
             <div class="profile__statistics-item">
@@ -83,8 +41,20 @@
 <script>
 import Container from '@/components/Container.vue'
 import Button from '@/components/Button.vue'
+import ProfileMainInfo from '@/components/ProfileMainInfo.vue'
+import ActivityGrid from '@/components/ActivityGrid.vue'
 export default {
-  
+  data: () => ({
+    userInfo: {
+      id: null,
+      username: null,
+      role: null,
+      lastname: null,
+      firstname: null,
+      patronymic: null,
+      testbook: null
+    }
+  }),
   computed: {
     username() {
       return localStorage.username
@@ -93,9 +63,22 @@ export default {
       return localStorage.userRole
     }
   },
+  mounted() {
+    this.userInfo = {
+      id: null,
+      username: localStorage.username,
+      role: localStorage.userRole,
+      lastname: this.$store.state.userInfo.lastname,
+      firstname: this.$store.state.userInfo.firstname,
+      patronymic: this.$store.state.userInfo.patronymic,
+      testbook: this.$store.state.userInfo.testbook
+    }
+  },
   components: {
     Container,
     Button,
+    ProfileMainInfo,
+    ActivityGrid,
   },
 }
 </script>
@@ -116,74 +99,15 @@ export default {
   gap: 16px;
   align-items: start;
 }
-.profile__main-info {
-  background: #FEFEFE;
-  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.12);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px 12px 8px 12px;
-  align-items: center;
-}
-.profile__avatar {
-  height: 100px;
-  width: 100px;
-  border-radius: 50%;
-  background-color: lightgray;
-  overflow: hidden;
-}
-.profile__username {
-  text-decoration: underline;
-}
-.profile__stud-number-and-login {
-  padding: 4px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.profile__stud-number, .profile__login {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
+
 
 .profile__activity-and-statistics {
   background: #FEFEFE;
   box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.12);
   border-radius: 10px;
 }
-.profile__activity {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px;
-}
-.profile__activity-title {
-  font-size: 18px;
-  font-weight: 700;
-}
-.profile__activity-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 16px);
-  grid-auto-rows: 16px;
-  gap: 4px;
-  align-items: center;
-  justify-items: center;
-}
-.activity-grid__cell {
-  border-radius: 1px;
-  background: #c4c4c4;
-  transition: 0.3s all;
-  height: 16px;
-  width: 16px;
-}
-.activity-grid__cell:hover {
-  background: #dddddd;
-  transition: 0.3s all;
-  height: 18px;
-  width: 18px;
-}
+
+
 .profile__divider {
   width: 100%;
   height: 1px;

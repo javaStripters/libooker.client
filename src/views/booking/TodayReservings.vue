@@ -17,29 +17,12 @@
       />
     </div>
     <div class="today-reservings__reservings">
-      <div 
-        class="today-reservings__reserving reserving"
+      <ReservingInline 
+        class="today-reservings__reserving"
         v-for="(booking, index) in todayBookings"
         :key="index"
-      >
-        <div class="reserving__avatar">
-          <img src="" alt="">
-        </div>
-        <div class="reserving__username">{{`${booking.user.lastname} ${booking.user.firstname}` }}</div>
-        <div class="reserving__computer-number">Компьютер: {{booking.workplace.name}}</div>
-        <div class="reserving__date">Дата: {{booking.date.split('-').reverse().join('.')}}г.</div>
-        <div class="reserving__week-day">День недели: {{}}</div>
-        <div class="reserving__time">Начало/конец брони: {{`${booking.startTime.slice(0, 5)}-${booking.endTime.slice(0, 5)}`}}</div>
-        <div class="reserving__actions"> 
-          <Button
-            theme="danger"
-            :onClick="() => {}"
-          >
-            Cancel
-
-          </Button>
-        </div>
-      </div>
+        :booking="booking"
+      />
     </div>
   </div>
 </template>
@@ -47,6 +30,7 @@
 <script>
 import SearchBox from '@/components/SearchBox.vue'
 import Button from '@/components/Button.vue'
+import ReservingInline from '@/components/ReservingInline.vue'
 export default {
   data: () => ({
     todayBookings: [],
@@ -91,6 +75,7 @@ export default {
   components: {
     SearchBox,
     Button,
+    ReservingInline,
   }
 }
 </script>
@@ -142,27 +127,5 @@ export default {
 }
 
 /* Reserving's styles */ 
-.reserving {
-  width: 100%;
-  max-width: 1200px;
-  background: #FFFFFF;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);
-  border-radius: 10px;
-  padding: 4px 16px;
 
-  display: grid;
-  grid-template-columns: 40px 1fr 140px 120px 200px 250px 1fr;
-  gap: 24px;
-  align-items: center;
-  font-size: 14px;
-}
-.reserving__avatar {
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  background: #bbbbbb;
-}
-.reserving__actions {
-  justify-self: center;
-}
 </style>
