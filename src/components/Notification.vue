@@ -15,7 +15,7 @@
         <div class="confirmExitFromAccount__actions">
           <Button
             theme='secondary'
-            :onClick="() => {}"
+            :onClick="() => {$emit('closeNotification')}"
           >
             Отмена
           </Button>
@@ -85,7 +85,7 @@ export default {
   .notification__body {
     background: #FFFFFF;
     border-radius: 8px;
-    padding: 8px 24px;
+    padding: 16px 32px;
     z-index: 10;
   }
   .confirmExitFromAccount, .cantOpenOfficialWeekendDays {
