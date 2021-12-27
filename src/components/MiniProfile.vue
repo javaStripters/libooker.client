@@ -1,30 +1,44 @@
 <template>
-  <router-link 
-    class="mini-profile"
-    :to="'/profile'"
-  >
-    <div class="mini-profile__avatar">
-      
+  <div>
+    <router-link 
+      class="mini-profile"
+      v-if="userRole === 'STUDENT'"
+      :to="'/profile'"
+    >
+      <div class="mini-profile__avatar"></div>
+      <div 
+        class="mini-profile__username"
+      >
+        {{`
+          ${$store.state.userInfo.lastname}
+          ${$store.state.userInfo.firstname ? $store.state.userInfo.firstname.slice(0, 1) : ''}.
+          ${$store.state.userInfo.patronymic ? $store.state.userInfo.patronymic.slice(0, 1) : ''}.
+        `}}
+      </div>
+      <!-- <img 
+        class="mini-profile__dropdown-icon"
+        :src="require('@/assets/icons/chevron-down.svg')" 
+      /> -->
+    </router-link>
+    <div
+      class="mini-profile"
+      :to="'/admin/profile'"
+      v-else-if="userRole === 'ADMIN'"
+    >
+      <div 
+        class="mini-profile__username"
+      >
+        Администратор
+      </div>
     </div>
-    <div class="mini-profile__username">
-      {{`
-        ${$store.state.userInfo.lastname}
-        ${$store.state.userInfo.firstname ? $store.state.userInfo.firstname.slice(0, 1) : ''}.
-        ${$store.state.userInfo.patronymic ? $store.state.userInfo.patronymic.slice(0, 1) : ''}.
-      `}}
-    </div>
-    <!-- <img 
-      class="mini-profile__dropdown-icon"
-      :src="require('@/assets/icons/chevron-down.svg')" 
-    /> -->
-  </router-link>
+  </div>
 </template>
 
 <script>
 export default {
   computed: {
-    username() {
-      return localStorage.username
+    userRole() {
+      return localStorage.userRole
     }
   }
 }

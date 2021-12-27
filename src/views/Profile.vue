@@ -6,12 +6,21 @@
         
         <div class="profile__main-info">
           <img src="" alt="" class="profile__avatar">
-          <div class="profile__username">
+          <div 
+            class="mini-profile__username"
+            v-if="userRole === 'STUDENT'"
+          >
             {{`
               ${$store.state.userInfo.lastname}
-              ${$store.state.userInfo.firstname} 
-              ${$store.state.userInfo.patronymic}
+              ${$store.state.userInfo.firstname ? $store.state.userInfo.firstname.slice(0, 1) : ''}.
+              ${$store.state.userInfo.patronymic ? $store.state.userInfo.patronymic.slice(0, 1) : ''}.
             `}}
+          </div>
+          <div 
+            class="mini-profile__username"
+            v-else-if="userRole === 'ADMIN'"
+          >
+            Администратор
           </div>
           <div class="profile__stud-number-and-login">
             <div class="profile__stud-number">
@@ -79,6 +88,9 @@ export default {
   computed: {
     username() {
       return localStorage.username
+    },
+    userRole() {
+      return localStorage.userRole
     }
   },
   components: {

@@ -10,7 +10,9 @@
       @openDay="(date) => {openDay(date)}"
       @closeDay="(date) => {closeDay(date)}"
     />
-
+    <div v-else>
+      
+    </div>
     <div 
       class="booking-confirmation"
       v-if="$store.state.userInfo.role === 'STUDENT' && selectedSlots.length !== 0"
