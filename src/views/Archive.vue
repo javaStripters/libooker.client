@@ -10,8 +10,11 @@
           type="archived"
         />
       </div>
-      <div v-if="archivedBookings.length === 0">
-        It's empty yet
+      <div 
+        v-if="archivedBookings.length === 0"
+        style="font-size: 16px; text-align: center"
+      >
+         Пока тут пусто
       </div>
     </Container>
   </div>
@@ -26,14 +29,15 @@ export default {
   }),
   methods: {
     getArchiveTickets() {
-      fetch(`${this.$store.state.server}/bookings/user?archive=false`, {
+      this.archivedBookings = []
+      fetch(`${this.$store.state.server}/bookings/user/archive?page=0&size=20&sort=`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
         },
       })
       .then( res => res.json())
       .then( res => {
-        this.archivedBookings = res
+        this.archivedBookings = res.content
       })
     }
   },
@@ -54,5 +58,11 @@ export default {
 .archive__title {
   font-weight: 700;
   margin-bottom: 16px;
+}
+.archive__tickets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, auto));
+  gap: 32px 44px;
+  justify-items: center;
 }
 </style>

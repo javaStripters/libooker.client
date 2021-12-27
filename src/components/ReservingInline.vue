@@ -19,7 +19,7 @@
         theme="danger"
         :onClick="() => {}"
       >
-        Cancel
+        Отменить
       </Button>
     </div>
   </div>

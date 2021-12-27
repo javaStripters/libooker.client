@@ -71,12 +71,11 @@ export default {
         console.log(res.content)
         res.content.forEach(booking => {
           if (booking.date.slice(0, 10) === today && (+booking.timeRange.from.replaceAll(':', '') < +currentTime.replaceAll(':', '') && +booking.timeRange.toInclusive.replaceAll(':', '') > +currentTime.replaceAll(':','') )) {
-            this.userBookings.active = booking
+            if (!booking.finishedManually) {this.userBookings.active = booking}
             console.log(booking)
           }
           else if (booking.date.slice(0, 10) === today && +currentTime.replaceAll(':', '') > +booking.timeRange.toInclusive.replaceAll(':', '')) {
             console.log('.')
-            //res.splice(res.indexOf(booking), 1)
           }
           else {
             this.userBookings.future.push(booking)

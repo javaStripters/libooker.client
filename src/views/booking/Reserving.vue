@@ -72,38 +72,48 @@
       class="reserving__sessions sessions"
       v-if="$store.state.userInfo.role === 'STUDENT'"
     >
-      <div 
-        class="sessions__active"
-        v-if="Object.entries(userBookings.active).length !== 0"
-      >
-        <div class="sessions__title">Активная сессия</div>
-        <div class="sessions__items">
-          <div class="sessions__item">
-            <div class="sessions__item-booking-time">
-              <div>Время бронирования: </div> 
-              <div>{{userBookings.active.startTime.slice(0, 5)}}-{{userBookings.active.endTime.slice(0, 5)}}</div>
-            </div>
-            <div class="sessions__item-timer-section">
-              <img 
-                class="sessions__item-timer-image"
-                :src="require('@/assets/sand-watch.svg')"
+      <div class="sessions__active-wrap">
+        <div 
+          class="sessions__active"
+          v-if="Object.entries(userBookings.active).length !== 0"
+        >
+          <div class="sessions__title">Активная сессия</div>
+          <div class="sessions__items">
+            <div class="sessions__item">
+              <div class="sessions__item-booking-time">
+                <div>Время бронирования: </div> 
+                <div>{{userBookings.active.startTime.slice(0, 5)}}-{{userBookings.active.endTime.slice(0, 5)}}</div>
+              </div>
+              <div class="sessions__item-timer-section">
+                <img 
+                  class="sessions__item-timer-image"
+                  :src="require('@/assets/sand-watch.svg')"
+                >
+                <div class="sessions__item-timer">
+                  {{countdownTimer}}
+                </div> 
+              </div>
+              <div class="sessions__item-actions">
+                <Button
+                  theme="secondary"
+                  :onClick="() => {$emit('openNotification', 'showExtendOptionsForBooking')}"
+                > Продлить </Button>  
+                <Button
+                  theme="danger"
+                  :onClick="() => {finishBooking(userBookings.active.id)}"
+                > Завершить </Button>  
+              </div> 
+              <div 
+                class="sessions__active-popup"
+                :class="[isChoosingExtendOption ? 'sessions__active-popup--visible' : 'sessions__active-popup--visible']"
+                v-if="isChoosingExtendOption"
               >
-              <div class="sessions__item-timer">
-                {{countdownTimer}}
+                
               </div> 
             </div>
-            <div class="sessions__item-actions">
-              <Button
-                theme="secondary"
-                :onClick="() => {}"
-              > Продлить </Button>  
-              <Button
-                theme="danger"
-                :onClick="() => {}"
-              > Завершить </Button>  
-            </div>  
           </div>
-        </div>
+          
+      </div>
       </div>
       <div class="sessions__nearest">
         <div class="sessions__title">Ближайшие сессии</div>
@@ -246,7 +256,8 @@ export default {
     choosedUser: {
       username: null,
       bookings: []
-    }
+    },
+    isChoosingExtendOption: false
   }),
   methods: {
     getAvailableTimeForBooking() {
@@ -456,12 +467,36 @@ export default {
         }
         this.getChoosedUserBookings(this.choosedUser.username)
       })
-    }
+    },
+    finishBooking(bookingId) {
+      fetch(`${this.$store.state.server}/bookings/finish/${bookingId}`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
+        },
+        method: 'PUT'
+      })
+      .then(res => res.json())
+      .then( res => {
+        console.log(res)
+        if ([404, 409].indexOf(res.status) !== -1) {
+          this.$emit('openNotification', 'error', res.message)
+        }
+      })
+    },
   },
 
   watch: {
     daysForBooking() {
       this.$emit('getUserBookings')
+    },
+    extentionTime() {
+      console.log(this.extentionTime)
+    }
+  },
+
+  computed: {
+    extentionTime() {
+      return this.$store.state.extentionTime
     }
   },
   mounted() {
@@ -512,6 +547,28 @@ export default {
     flex-direction: column;
     row-gap: 10px;
     font-size: 14px;
+  }
+  .sessions__active-wrap {
+  }
+  .sessions__active-popup {
+    position: absolute;
+    margin: -8px -12px;
+    width: 314px;
+    height: 155px;
+    border-radius: 8px;
+    background: #013B2B;
+  }
+  .sessions__active-popup--visible {
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.9;
+    transition: 0.3s opacity;
+  }
+  .sessions__active-popup--unvisible {
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0;
+    transition: 0.3s opacity;
   }
   .sessions__title,
   .booking-confirmation__title,

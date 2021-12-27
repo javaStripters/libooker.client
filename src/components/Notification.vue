@@ -42,6 +42,29 @@
           К сожалению, пока нельзя открывать запись на дни, совпадающие с официальными выходными или государственными празниками
         </div>
       </div>
+      <div class="showExtendOptionsForBooking" v-if="type === 'showExtendOptionsForBooking'">
+        <div class="showExtendOptionsForBooking__header">
+          <div class="showExtendOptionsForBooking__title">Продлить сессию на:</div>
+        </div>
+        <div class="showExtendOptionsForBooking__actions">
+          <Button
+          theme="primary"
+          :onClick="() => {$store.state.extentionTime = 30; $emit('closeNotification')}"
+          >30 мин.</Button>
+          <Button
+            theme="primary"
+            :onClick="() => {$store.state.extentionTime = 60; $emit('closeNotification')}"
+          >1 час</Button>
+          <Button
+            theme="primary"
+            :onClick="() => {$store.state.extentionTime = 90; $emit('closeNotification')}"
+          >1 час 30 мин.</Button>
+          <Button
+            theme="primary"
+            :onClick="() => {$store.state.extentionTime = 120; $emit('closeNotification')}"
+          >2 часа</Button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -107,5 +130,14 @@ export default {
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
   }
-
+  .showExtendOptionsForBooking__title {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  .showExtendOptionsForBooking__actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
 </style>

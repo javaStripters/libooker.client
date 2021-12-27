@@ -13,6 +13,7 @@ export default new Vuex.Store({
     tokenHeader: null,
     userRole: null /* String: 'STUDENT', 'ADMIN' */,
     userInfo: {},
+    extentionTime: null,
   },
   mutations: {
   },
