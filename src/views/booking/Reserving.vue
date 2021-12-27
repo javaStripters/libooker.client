@@ -153,9 +153,79 @@
       v-if="$store.state.userInfo.role === 'ADMIN'"
     > 
       <div class="users-search__title">Пользователи</div>
-      <SearchBox />
+      <SearchBox 
+        @editSearchfieldContent="(val) => {val.length >= 3 ? getStudents(val) : students = []}"
+      />
+      <div 
+        class="users-search__divider"
+        v-if="students.length !== 0"
+      ></div>
+      <div 
+        class="users-search__users"
+        v-if="students.length !== 0"
+      >
+        <div 
+          class="users-search__user user"
+          v-for="(user, index) in students"
+          :key="index"
+        >
+          <div 
+            class="user__avatar--checked"
+            v-if="user.username === choosedUser.username"
+            @click="choosedUser.username = null"
+          >
+            <img :src="require('@/assets/icons/checked-icon.svg')" alt="">
+          </div>
+          <div 
+            class="user__avatar"
+            v-else
+            @click="() => {choosedUser.username = user.username; getChoosedUserBookings(user.username)}"
+          ></div>
+          <div class="user__info-items">
+            <div class="user__info-item user__username">
+              <div>Имя: </div>
+              <div>{{`${user.lastname} ${user.firstname}`}}</div>
+            </div>
+            <div class="user__info-item">
+              <div>Логин: </div>
+              <div>{{user.username}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <div 
+      class="user-bookings"
+      v-if="$store.state.userInfo.role === 'ADMIN'"
+    >
+      <div class="user-bookings__title">Подтвердите Ваш выбор</div>
+      <div class="user-bookings__tickets">
+        <div 
+          class="user-bookings__ticket mini-ticket"
+          v-for="(booking, index) in choosedUser.bookings"
+          :key="index"
+        >
+          <div class="mini-ticket__aside">{{booking.date.split('-')[2]}}</div>
+          <div class="mini-ticket__body">
+            <div class="mini-ticket__info-item">
+              <div>Выбранное время:</div>
+              <div>{{`${booking.startTime.slice(0, 5)}-${booking.endTime.slice(0, 5)}`}}</div>
+            </div>
+            <div class="mini-ticket__actions">
+              <div></div>
+              <Button
+                class="mini-ticket__button"
+                theme="danger"
+                :onClick="() => {cancelBooking(booking.id)}"
+              >
+                Отменить запись
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -171,7 +241,12 @@ export default {
     daysForBooking: [],
     selectedSlots: [],
     usersSearchInput: null,
-    countdownTimer: null
+    countdownTimer: null,
+    students: [], 
+    choosedUser: {
+      username: null,
+      bookings: []
+    }
   }),
   methods: {
     getAvailableTimeForBooking() {
@@ -333,8 +408,50 @@ export default {
       this.countdownTimer = `
         ${hours.toString().length === 1 ? '0' + hours : hours}:${minutes.toString().length === 1 ? '0' + minutes : minutes}:${seconds.toString().length === 1 ? '0' + seconds : seconds}
         `
+    },
+    getStudents(val) {
+      fetch(`${this.$store.state.server}/admin/user-search?query=${val}`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
+          "Content-type" : 'application/json'
+        },
+        method: 'POST',
+        
+      })
+      .then( res => res.json())
+      .then( res => {
+        console.log(res)
+        this.students = res
+      })
+    },
+    getChoosedUserBookings(userId) {
+      fetch(`${this.$store.state.server}/bookings/user/${userId}`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
+        },
+      })
+      .then( res => res.json())
+      .then( res => {
+        console.log(res)
+        this.choosedUser.bookings = res.content
+      })
+    },
+    cancelBooking(bookingId) {
+      // $emit()
+      fetch(`${this.$store.state.server}/bookings/finish/${bookingId}`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
+        },
+        method: 'PUT'
+      })
+      .then( res => {
+        if (res.status === 204) {
+          this.getChoosedUserBookings(this.choosedUser.username)
+        }
+      })
     }
   },
+
   watch: {
     daysForBooking() {
       this.$emit('getUserBookings')
@@ -391,7 +508,8 @@ export default {
   }
   .sessions__title,
   .booking-confirmation__title,
-  .users-search__title {
+  .users-search__title,
+  .user-bookings__title {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-style: normal;
     font-weight: bold;
@@ -489,11 +607,102 @@ export default {
   .booking-confirmation__button {
     width: 100%;
   }
-  .users-search {
+  .users-search, .user-bookings {
     background: #FFFFFB;
     box-shadow: 0px 0px 5px rgba(103, 91, 83, 0.5);
     border-radius: 5px;
     padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
-
+  .users-search__divider {
+    height: 1px;
+    width: 100%;
+    background: #695D55;
+  }
+  .users-search__users {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  /* USER */
+  .user {
+    background: #FCFCFC;
+    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 16px;
+  }
+  .user__avatar {
+    height: 40px;
+    width: 40px;
+    background: #bbbbbb;
+    border-radius: 50%;
+  }
+  .user__avatar--checked {
+    background: #013B2B;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .user__avatar--checked img {
+    height: 20px;
+    width: 20px;
+  }
+  .user__info-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .user__info-item {
+    display: flex;
+    justify-content: space-between;
+  }
+  .user__username div:nth-child(2) {
+    text-decoration: underline;
+  }
+  /* Mini tickets */
+  .mini-ticket {
+    background: #FEFEFE;
+    border: 1px solid #013B2B;
+    box-sizing: border-box;
+    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 55px 1fr;
+    overflow: hidden;
+    min-height: 90px;
+  }
+  .mini-ticket__aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background: #F4F4D7;
+    border-right: 1px solid #013B2B;
+    color: #013B2B;
+    font-size: 24px;
+  }
+  .mini-ticket__body {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    padding: 8px 12px;
+    align-items: center;
+  }
+  .mini-ticket__info-item {
+    display: flex;
+    justify-content: space-between;
+  }
+  .mini-ticket__actions {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 10px;
+  }
 </style>

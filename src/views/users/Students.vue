@@ -2,28 +2,35 @@
   <div class="students">
     <SearchBox 
       class="students__search-box"
+      @editSearchfieldContent="(val) => {val.length >= 3 && getStudents(val)}"
     />
     <div class="students__body">
-      <div 
+      <div
+        v-if="students.length === 0"
+      >
+        Начните вводить данные студента.
+      </div>
+      <router-link 
         class="students__student student"
-        v-for="student in 30"
-        :key="student"
+        v-for="(user, index) in students"
+        :key="index"
+        :to="`/admin/users/student/${user.username}`"
       >
         <div class="student__avatar">
           <img src="" alt="">
         </div>
-        <div class="student__username">{{}}</div>
+        <div class="student__username">{{user.lastname + ' ' + user.firstname}}</div>
         <div class="student__info-items">
           <div class="student__info-item">
             <div>Номер студ. билета:</div>
-            <div>{{}}</div>
+            <div>{{user.testbook}}</div>
           </div>
           <div class="student__info-item">
             <div>Логин:</div>
-            <div>{{}}</div>
+            <div>{{user.username}}</div>
           </div>
         </div>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -31,8 +38,27 @@
 <script>
 import SearchBox from '@/components/SearchBox.vue'
 export default {
-  
-
+  data: () => ({
+    students: []
+  }),
+  methods: {
+    getStudents(val) {
+      fetch(`${this.$store.state.server}/admin/user-search?query=${val}`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
+          "Content-type" : 'application/json'
+        },
+        method: 'POST',
+        
+      })
+      .then( res => res.json())
+      .then( res => {
+        console.log(res)
+        this.students = res
+      })
+    }
+    
+  },
   components: {
     SearchBox,
   }
@@ -71,6 +97,8 @@ export default {
   grid-template-rows: 1fr min-content;
   gap: 8px;
   align-items: center;
+  color: black;
+  text-decoration: none;
 }
 .student__avatar {
   height: 80px;

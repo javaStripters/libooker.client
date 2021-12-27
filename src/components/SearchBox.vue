@@ -6,13 +6,17 @@
       class="search-box__input"
       type="text" 
       placeholder="введите данные"
-      v-model="usersSearchInput"
+      @input="(val) => $emit('editSearchfieldContent', val.target.value)"
+      :value="content"
     >
   </div>
 </template>
 
 <script>
 export default {
+  props: [
+    'content'
+  ],
   data: () => ({
     usersSearchInput: ''
   }),

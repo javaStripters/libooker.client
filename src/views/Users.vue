@@ -1,9 +1,9 @@
 <template>
   <div class="users">
-    <Navigation 
+    <!-- <Navigation 
       class="users__navigation"
       :buttons="navigationButtons"
-    />
+    /> -->
     <Container class="users__container">
       
       <router-view />
@@ -42,6 +42,8 @@ export default {
 <style scoped>
   .users__navigation {
     padding-top: 24px;
-    padding-bottom: 16px;
+  }
+  .users__container {
+    padding-top: 24px;
   }
 </style>
