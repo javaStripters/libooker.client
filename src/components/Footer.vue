@@ -24,6 +24,9 @@
             <img :src="require('@/assets/icons/twitter.svg')" alt="">
           </a>
           <a href="">
+            <img :src="require('@/assets/icons/instagram.svg')" alt="">
+          </a>
+          <a href="">
             <img :src="require('@/assets/icons/chrome.svg')" alt="">
           </a>
         </div>

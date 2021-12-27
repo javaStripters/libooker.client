@@ -12,12 +12,12 @@
           class="header__user-profile" 
         />
         <div class="header__vertical-divider"></div>
-        <button 
+        <!-- <button 
           class="header__see-notification-btn"
           @click="false"
         >
           <img :src="require('@/assets/icons/bell-icon.svg')" alt="">
-        </button>
+        </button> -->
         <button
           class="header__log-out-btn"
           @click="$emit('openNotification', 'confirmExitFromAccount')"
@@ -47,7 +47,7 @@ export default {
   .header {
     height: 64px;
     width: 100%;
-    background: #106653;
+    background: #013B2B;
   }
   .header__container {
     display: flex;

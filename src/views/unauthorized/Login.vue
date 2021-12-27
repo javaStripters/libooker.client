@@ -1,28 +1,28 @@
 <template>
-  <div>
-    <Card :title="'Login'"> 
-      <div>Логин</div>
-      <input type="text" v-model="username">
-      <div>Пароль</div>
-      <input type="password" v-model="password">
+  <div class="login">
+    <div class="login__title">Авторизация</div>
+    <div class="login__form"> 
+      <div class="login__lable">Логин</div>
+      <input class="login__input" type="text" v-model="username">
+      <div class="login__lable">Пароль</div>
+      <input class="login__input" type="password" v-model="password">
       <div></div>
-      <button 
-        style="
-          border: 1px solid black; 
-          border-radius: 3px; 
-          width: 100%; 
-          padding: 3px; 
-          margin-top: 10px;
-        "
-        @click="login()"
-      >Войти</button>
+      <Button 
+        class="login__submit-btn"
+        theme='primary'
+        :onClick="() => {login()}"
+      >Войти</Button>
       <div></div>
-      <!-- <router-link to="registration">Зарегистрироваться</router-link> -->
-    </Card>
+    </div>
+    <div class="login__hint">
+      Нажимая кнопку “Авторизироваться” Вы соглашаетесь с политикой 
+      конфеденциальности и принимаете пользовательское соглашение
+    </div>
   </div>
 </template>
 
 <script>
+import Button from '@/components/Button.vue'
 import Card from '@/components/Card.vue'
 export default {
   data: () => ({
@@ -65,12 +65,60 @@ export default {
   },
   components: {
     Card,
+    Button,
   }
 }
 </script>
 
 <style scoped>
   .login {
-
+    background: #E6DFC9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 15px;
+  }
+  .login__title {
+    color: #013b2b;
+    font-size: 48px;
+    margin-bottom: 100px;
+  }
+  .login__form {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    padding: 24px 32px 20px 32px;
+    width: 100%;
+    max-width: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .login__lable {
+    font-size: 20px;
+  }
+  .login__input {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    height: 46px;
+    width: 100%;
+    border: none;
+    padding: 8px;
+  }
+  .login__submit-btn {
+    align-self: center;
+    height: 46px;
+    width: 100%;
+    max-width: 300px;
+    font-size: 24px;
+  }
+  .login__hint {
+    text-align: center;
+    width: 90%;
+    max-width: 450px;
+    margin-top: 10px;
+    line-height: 25px;
   }
 </style>
