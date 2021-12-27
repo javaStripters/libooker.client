@@ -6,6 +6,7 @@
     <Notification 
       v-if="isNotification"
       :type="notificationType"
+      :text="notificationContent"
       @closeNotification="isNotification = false"
     />
   </div>
@@ -16,12 +17,14 @@ import Notification from '@/components/Notification.vue'
 export default {
   data: () => ({
     notificationType: 'confirmExitFromAccount',
-    isNotification: false
+    isNotification: false,
+    notificationContent: ''
   }),
   methods: {
-    openNotification(type) {
-      console.log(type)
-      this.notificationType = type 
+    openNotification(type, text = 'рур') {
+      console.log(type, text)
+      this.notificationType = type
+      this.notificationContent = text
       this.isNotification = true
     }
   },

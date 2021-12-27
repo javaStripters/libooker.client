@@ -4,7 +4,14 @@
       class="notification__wrap"
       @click="$emit('closeNotification')"
     ></div>
+    
     <div class="notification__body">
+      <div 
+        class="notification--error"
+        v-if="type === 'error'"
+      >
+        Ошибка: {{text}}
+      </div>
       <div
         class="confirmExitFromAccount"
         v-if="type === 'confirmExitFromAccount'"
@@ -43,7 +50,8 @@
 import Button from '@/components/Button.vue'
 export default {
   props: [
-    'type'
+    'type',
+    'text'
   ],
 
   methods: {

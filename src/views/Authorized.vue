@@ -11,7 +11,7 @@
       />
       <router-view 
         :userRole="userRole"
-        @openNotification="(type) =>{$emit('openNotification', type)}"
+        @openNotification="(type, text) =>{$emit('openNotification', type, text)}"
       />
     </div>
 

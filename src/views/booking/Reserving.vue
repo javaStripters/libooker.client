@@ -432,22 +432,28 @@ export default {
       })
       .then( res => res.json())
       .then( res => {
-        console.log(res)
-        this.choosedUser.bookings = res.content
+        this.choosedUser.bookings = []
+        this.choosedUser.bookings = res.content.filter( booking => {
+          console.log(booking.canceled)
+          console.log(booking)
+          return booking.canceled === false
+        })
       })
     },
     cancelBooking(bookingId) {
-      // $emit()
       fetch(`${this.$store.state.server}/bookings/finish/${bookingId}`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
         },
         method: 'PUT'
       })
+      .then(res => res.json())
       .then( res => {
-        if (res.status === 204) {
-          this.getChoosedUserBookings(this.choosedUser.username)
+        console.log(res)
+        if (res.status === 409) {
+          this.$emit('openNotification', 'error', res.message)
         }
+        this.getChoosedUserBookings(this.choosedUser.username)
       })
     }
   },
@@ -666,6 +672,12 @@ export default {
   }
   .user__username div:nth-child(2) {
     text-decoration: underline;
+  }
+  /* -------- */
+  .user-bookings__tickets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
   /* Mini tickets */
   .mini-ticket {

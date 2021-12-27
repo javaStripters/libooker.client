@@ -7,7 +7,7 @@
         <router-view 
           :userBookings="userBookings"
           @getUserBookings="getUserBookings"
-          @openNotification="(type) => $emit('openNotification', type)"
+          @openNotification="(type, text) => $emit('openNotification', type, text)"
         />
       </Container>
     </div>
@@ -69,7 +69,7 @@ export default {
         const currentTime = now.toLocaleString('ru-RU').split(',')[1]
         this.userBookings.future = []
         console.log(res.content)
-        res.content[0].forEach(booking => {
+        res.content.forEach(booking => {
           if (booking.date.slice(0, 10) === today && (+booking.timeRange.from.replaceAll(':', '') < +currentTime.replaceAll(':', '') && +booking.timeRange.toInclusive.replaceAll(':', '') > +currentTime.replaceAll(':','') )) {
             this.userBookings.active = booking
             console.log(booking)
