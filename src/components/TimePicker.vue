@@ -64,12 +64,18 @@
             :class="[
               isSelected(day.date, interval.range, selectedSlots) && 'time-picker__slot time-picker__slot--selected'
             ]"
-            v-if="interval.state === 'FREE'"
+            v-if="userRole === 'STUDENT' && interval.state === 'FREE'"
             @click="$emit('bookSlot', day.date, interval.range)"
           >
             {{
               isSelected(day.date, interval.range, selectedSlots) ? 'Выбрано' : 'Забронировать'
             }}
+          </div>
+          <div
+            class="time-picker__slot time-picker__slot--free"
+            v-else-if="userRole === 'ADMIN' && interval.state === 'FREE'"
+          >
+            Свободно
           </div>
           <div 
             class="time-picker__slot time-picker__slot--reserved"
@@ -108,6 +114,11 @@ export default {
   }), 
   methods: {
     
+  },
+  computed: {
+    userRole() {
+      return localStorage.userRole
+    }
   },
   components: {
     Button,
