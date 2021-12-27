@@ -4,17 +4,17 @@
       <div class="today-reservings__filters">
         <div 
           class="today-reservings__filter"
-          :class="[filter.name === choosedFilter && 'today-reservings__filter--choosed']"
+          :class="[filter.value === choosedFilter && 'today-reservings__filter--choosed']"
           v-for="filter in filters"
           :key="filter.value"
           v-html="filter.text"
-          @click="choosedFilter = filter.name"
+          @click="choosedFilter = filter.value; getTodayBookings(filter.value)"
         >
         </div>
       </div>
-      <SearchBox 
+      <!-- <SearchBox 
         class="today-reservings__search-box"
-      />
+      /> -->
     </div>
     <div class="today-reservings__reservings">
       <ReservingInline 
@@ -23,6 +23,9 @@
         :key="index"
         :booking="booking"
       />
+      <div v-if="todayBookings.length === 0">
+        Записей типа "{{filters.filter(filter => filter.value === choosedFilter)[0].text}}" не найдено 
+      </div>
     </div>
   </div>
 </template>
@@ -34,16 +37,16 @@ import ReservingInline from '@/components/ReservingInline.vue'
 export default {
   data: () => ({
     todayBookings: [],
-    choosedFilter: 'Active',
+    choosedFilter: 'current',
     filters: [
       {
         name: 'Active',
-        value: 'active',
+        value: 'current',
         text: 'Активные'
       },
       {
         name: 'Nearest',
-        value: 'nearest',
+        value: 'next',
         text: 'Ближайшие'
       },
       {
@@ -54,15 +57,15 @@ export default {
     ]
   }),
   methods: {
-    getTodayBookings() {
-      fetch(`${this.$store.state.server}/bookings?today=true`, {
+    getTodayBookings(type) {
+      this.todayBookings = []
+      fetch(`${this.$store.state.server}/bookings/today/${type}`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
         }
       })
       .then( res => res.json())
       .then( res => {
-        console.log(res)
         this.todayBookings = res.content
       })
     }

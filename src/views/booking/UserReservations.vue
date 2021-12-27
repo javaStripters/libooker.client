@@ -1,7 +1,12 @@
 <template>
   <div class="user-reservations">
     <Ticket 
-      v-for="(booking, index) in userBookings"
+      :info="userBookings.active"
+      type="actual"
+      @getUserBookings="$emit('getUserBookings')"
+    />
+    <Ticket 
+      v-for="(booking, index) in userBookings.future"
       :key="index"
       :info="booking"
       type="actual"

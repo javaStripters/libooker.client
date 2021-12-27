@@ -197,7 +197,7 @@
 
     <div 
       class="user-bookings"
-      v-if="$store.state.userInfo.role === 'ADMIN'"
+      v-if="$store.state.userInfo.role === 'ADMIN' && choosedUser.bookings.length !== 0"
     >
       <div class="user-bookings__title">Подтвердите Ваш выбор</div>
       <div class="user-bookings__tickets">
@@ -425,6 +425,7 @@ export default {
       })
     },
     getChoosedUserBookings(userId) {
+      console.log('Im working')
       fetch(`${this.$store.state.server}/bookings/user/${userId}`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
@@ -441,16 +442,16 @@ export default {
       })
     },
     cancelBooking(bookingId) {
-      fetch(`${this.$store.state.server}/bookings/finish/${bookingId}`, {
+      fetch(`${this.$store.state.server}/bookings/${bookingId}`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
         },
-        method: 'PUT'
+        method: 'DELETE'
       })
       .then(res => res.json())
       .then( res => {
         console.log(res)
-        if (res.status === 409) {
+        if ([404, 409].indexOf(res.status) !== -1) {
           this.$emit('openNotification', 'error', res.message)
         }
         this.getChoosedUserBookings(this.choosedUser.username)

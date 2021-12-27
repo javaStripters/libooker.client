@@ -11,7 +11,7 @@
       <div class="ticket__student-info-and-time">
         <div class="ticket__info">
           <div>Номер студ. билета:</div>
-          <div>{{}}</div>
+          <div>{{info.user.testbook}}</div>
         </div>
         <div class="ticket__info">
           <div>Дата Вашей брони:</div>
@@ -47,7 +47,7 @@
         class="ticket__button"
         theme="primary"
         :onClick="() => {}"
-        > Подтвердить </Button>
+        > Скачать </Button>
       </div>
     </div> 
   </div>
@@ -70,6 +70,9 @@ export default {
       })
       this.$emit('getUserBookings')
     },
+  },
+  computed: {
+
   },
   components: {
     Button,

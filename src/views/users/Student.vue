@@ -41,11 +41,6 @@
           :key="index"
           :booking="booking"
         />
-        <ReservingInline 
-          v-for="(booking, index) in bookings"
-          :key="index"
-          :booking="booking"
-        />
       </div>
     </div>
 

@@ -25,7 +25,7 @@ export default {
       {
         name: 'Reserving',
         goTo: '/booking/reserving',
-        text: 'Резервация'
+        text: 'Бронирование'
       },
       {
         name: 'User Reservations',
