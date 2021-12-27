@@ -1,6 +1,9 @@
 <template>
   <div class="notification">
-    <div class="notification__wrap"></div>
+    <div 
+      class="notification__wrap"
+      @click="$emit('closeNotification')"
+    ></div>
     <div class="notification__body">
       <div
         class="confirmExitFromAccount"
@@ -22,6 +25,14 @@
           >
             Выйти
           </Button>
+        </div>
+      </div>
+      <div
+        class="cantOpenOfficialWeekendDays"
+        v-else-if="type === 'cantOpenOfficialWeekendDays'"
+      >
+        <div>
+          К сожалению, пока нельзя открывать запись на дни, совпадающие с официальными выходными или государственными празниками
         </div>
       </div>
     </div>
@@ -77,7 +88,7 @@ export default {
     padding: 8px 24px;
     z-index: 10;
   }
-  .confirmExitFromAccount {
+  .confirmExitFromAccount, .cantOpenOfficialWeekendDays {
     max-width: 250px;
     display: flex;
     flex-direction: column;

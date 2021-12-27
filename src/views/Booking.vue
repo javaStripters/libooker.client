@@ -7,6 +7,7 @@
         <router-view 
           :userBookings="userBookings"
           @getUserBookings="getUserBookings"
+          @openNotification="(type) => $emit('openNotification', type)"
         />
       </Container>
     </div>
@@ -57,7 +58,6 @@ export default {
       .then(res => res.json())
       .then(res => {
         this.userBookings = res
-        console.log(this.userBookings)
       })
     },
   },

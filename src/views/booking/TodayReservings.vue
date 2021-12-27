@@ -2,14 +2,13 @@
   <div class="today-reservings">
     <div class="today-reservings__actions">
       <div class="today-reservings__filters">
-        <div class="today-reservings__filter today-reservings__filter--choosed">
-          Choosed
-        </div>
         <div 
           class="today-reservings__filter"
+          :class="[filter.name === choosedFilter && 'today-reservings__filter--choosed']"
           v-for="filter in filters"
           :key="filter.value"
           v-html="filter.text"
+          @click="choosedFilter = filter.name"
         >
         </div>
       </div>
@@ -20,18 +19,17 @@
     <div class="today-reservings__reservings">
       <div 
         class="today-reservings__reserving reserving"
-        v-for="reserving in 10"
-        :key="reserving"
+        v-for="(booking, index) in todayBookings"
+        :key="index"
       >
         <div class="reserving__avatar">
-          {{reserving}}
           <img src="" alt="">
         </div>
-        <div class="reserving__username">{{}}</div>
-        <div class="reserving__computer-number">Компьютер: {{}}</div>
-        <div class="reserving__date">Дата: {{}}</div>
+        <div class="reserving__username">{{`${booking.user.lastname} ${booking.user.firstname}` }}</div>
+        <div class="reserving__computer-number">Компьютер: {{booking.workplace.name}}</div>
+        <div class="reserving__date">Дата: {{booking.date.split('-').reverse().join('.')}}г.</div>
         <div class="reserving__week-day">День недели: {{}}</div>
-        <div class="reserving__time">Начало/конец брони: {{}}</div>
+        <div class="reserving__time">Начало/конец брони: {{`${booking.startTime.slice(0, 5)}-${booking.endTime.slice(0, 5)}`}}</div>
         <div class="reserving__actions"> 
           <Button
             theme="danger"
@@ -51,6 +49,8 @@ import SearchBox from '@/components/SearchBox.vue'
 import Button from '@/components/Button.vue'
 export default {
   data: () => ({
+    todayBookings: [],
+    choosedFilter: 'Active',
     filters: [
       {
         name: 'Active',
@@ -69,9 +69,24 @@ export default {
       },
     ]
   }),
+  methods: {
+    getTodayBookings() {
+      fetch(`${this.$store.state.server}/bookings?today=true`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+        }
+      })
+      .then( res => res.json())
+      .then( res => {
+        console.log(res)
+        this.todayBookings = res.content
+      })
+    }
+  },
 
-
-
+  mounted() {
+    this.getTodayBookings()
+  },
 
   components: {
     SearchBox,
@@ -109,9 +124,12 @@ export default {
   align-items: center;
   justify-content: center;
   color: #868686;
+  transition: .3s all;
+  cursor: pointer;
 }
 .today-reservings__filter--choosed {
   color: #013B2B;
+  transition: .3s all;
 }
 .today-reservings__search-box {
   min-width: 300px;
@@ -133,7 +151,7 @@ export default {
   padding: 4px 16px;
 
   display: grid;
-  grid-template-columns: 40px 1fr 120px 120px 200px 250px 1fr;
+  grid-template-columns: 40px 1fr 140px 120px 200px 250px 1fr;
   gap: 24px;
   align-items: center;
   font-size: 14px;

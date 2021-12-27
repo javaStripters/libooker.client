@@ -29,7 +29,7 @@
           <Button 
             class="booking-confirmation__button" 
             theme="primary"
-            :onClick="() => confirmAllBookings()"
+            :onClick="() => concantenateSeveralBookingsToOne()"
           > Подтвердить все </Button>
         </div>
         <div class="booking-confirmation__items">
@@ -166,7 +166,6 @@ export default {
           }
           if (data.length === 5 && !data.includes(undefined) ) {
             this.daysForBooking = data
-            console.log(this.daysForBooking)
           }
         })
       }
@@ -212,12 +211,37 @@ export default {
       }
       return false 
     },
+    concantenateSeveralBookingsToOne() {
+      let slots = [...this.selectedSlots]
+      slots.sort( (a, b) => {
+        if (a.date !== b.date) {
+          return a.date - b.date
+        }
+        else if (a.range.from !== b.range.from) {
+          return +a.range.from.split(':').slice(0, 1).join('') - +b.range.from.split(':').slice(0, 1).join('')
+        }
+      })
+      let i = 0
+      while (i < slots.length - 1) {
+        if (slots[i].date === slots[i + 1].date && slots[i].range.toInclusive === slots[i + 1].range.from) {
+          slots[i] = {
+            date: slots[i].date,
+            range: {
+              from: slots[i].range.from,
+              toInclusive: slots[i + 1].range.toInclusive
+            }
+          }
+          slots.splice([i + 1], 1)
+        }
+        else {
+          i++
+        }
+      }
+      this.selectedSlots = slots
+      this.confirmAllBookings()
+    },
     confirmAllBookings() {
       this.selectedSlots.forEach( slot => {
-        console.log({
-            from: `${slot.date.toISOString().slice(0, 10)}T${slot.range.from}Z`,
-            to: `${slot.date.toISOString().slice(0, 10)}T${slot.range.toInclusive}Z`
-          })
         fetch(`${this.$store.state.server}/bookings?from=${slot.date.toISOString().slice(0, 10)}T${slot.range.from}Z&to=${slot.date.toISOString().slice(0, 10)}T${slot.range.toInclusive}Z`, {
           method: 'POST',
           headers: {
@@ -227,7 +251,6 @@ export default {
         })
         .then(res => res.json())
         .then(res => {
-          console.log(res)
           this.bookSlot(slot.date, slot.range)
           this.getAvailableTimeForBooking()
         })
@@ -244,7 +267,6 @@ export default {
       .then(res => res.json())
       .then(res => {
         this.bookSlot(date, range)
-        console.log(res)
         this.getAvailableTimeForBooking()
       })
     },
@@ -256,8 +278,12 @@ export default {
         },
       })
       .then( res => {
-        console.log(res)
-        this.getAvailableTimeForBooking()
+        if (res.status === 204) {
+          this.getAvailableTimeForBooking()
+        }
+        else if (res.status === 404) {
+          this.$emit('openNotification', 'cantOpenOfficialWeekendDays')
+        }
       })
     },
     closeDay(date) {
@@ -269,7 +295,6 @@ export default {
       })
       .then( res => res.json())
       .then( res => {
-        console.log(res)
         this.getAvailableTimeForBooking()
       })
     },
