@@ -72,12 +72,34 @@
     >
       <div 
         class="sessions__active"
-        v-if="false"
+        v-if="Object.entries(userBookings.active).length !== 0"
       >
         <div class="sessions__title">Активная сессия</div>
         <div class="sessions__items">
           <div class="sessions__item">
-
+            <div class="sessions__item-booking-time">
+              <div>Время бронирования: </div> 
+              <div>{{userBookings.active.startTime.slice(0, 5)}}-{{userBookings.active.endTime.slice(0, 5)}}</div>
+            </div>
+            <div class="sessions__item-timer-section">
+              <img 
+                class="sessions__item-timer-image"
+                :src="require('@/assets/sand-watch.svg')"
+              >
+              <div class="sessions__item-timer">
+                {{countdownTimer}}
+              </div> 
+            </div>
+            <div class="sessions__item-actions">
+              <Button
+                theme="secondary"
+                :onClick="() => {}"
+              > Продлить </Button>  
+              <Button
+                theme="danger"
+                :onClick="() => {}"
+              > Завершить </Button>  
+            </div>  
           </div>
         </div>
       </div>
@@ -85,11 +107,11 @@
         <div class="sessions__title">Ближайшие сессии</div>
         <div 
           class="sessions__items"
-          v-if="userBookings.length !== 0"
+          v-if="userBookings.future.length !== 0"
         >
           <div 
             class="sessions__item"
-            v-for="(booking, index) in userBookings"
+            v-for="(booking, index) in userBookings.future"
             :key="index"
           >
             <div class="sessions__item-booking-date">
@@ -104,6 +126,7 @@
               class="sessions__item-actions"
               v-if="!booking.canceled"
             >
+              <div></div>
               <Button
                 class="sessions__item-button"
                 :onClick="() => {removeBooking(booking.id)}"
@@ -145,7 +168,8 @@ export default {
   data: () => ({
     daysForBooking: [],
     selectedSlots: [],
-    usersSearchInput: null
+    usersSearchInput: null,
+    countdownTimer: null
   }),
   methods: {
     getAvailableTimeForBooking() {
@@ -298,6 +322,16 @@ export default {
         this.getAvailableTimeForBooking()
       })
     },
+    timer() {
+      let endTime = new Date(this.userBookings.active.date + 'T' + this.userBookings.active.endTime)
+      let now = new Date()
+      let hours = Math.floor(((endTime.getTime() - now.getTime()) / 1000) / 60 / 60)
+      let minutes = (Math.floor(((endTime.getTime() - now.getTime()) / 1000) / 60 % 60))
+      let seconds = (Math.round(((endTime.getTime() - now.getTime()) / 1000) % 60))
+      this.countdownTimer = `
+        ${hours.toString().length === 1 ? '0' + hours : hours}:${minutes.toString().length === 1 ? '0' + minutes : minutes}:${seconds.toString().length === 1 ? '0' + seconds : seconds}
+        `
+    }
   },
   watch: {
     daysForBooking() {
@@ -306,6 +340,12 @@ export default {
   },
   mounted() {
     this.getAvailableTimeForBooking()
+    window.setInterval( () => {
+      if (Object.entries(this.userBookings.active).length !== 0) {
+        this.timer()
+      }
+    }, 1000)
+    
   },
   components: {
     TimePicker,
@@ -370,14 +410,27 @@ export default {
     gap: 10px;
   }
   .sessions__item-actions {
-    justify-self: end;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
   .sessions__item-button {
-    width: 150px;
   }
   .sessions__item-booking-date, .sessions__item-booking-time {
     display: flex;
     justify-content: space-between;
+  }
+  
+  .sessions__item-timer-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    align-items: center;
+  }
+  .sessions__item-timer {
+    font-size: 30px;
+    font-weight: 700;
+    color: #013B2B;
   }
   /* BOOKING CONFIRMATION */
   .booking-confirmation {

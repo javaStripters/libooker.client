@@ -99,7 +99,7 @@ export default {
     display: flex;
     flex-flow: row-reverse wrap;
     gap: 10px 20px;
-    align-items: end;
+    align-items: flex-end;
     justify-items: end;
   }
   .footer__contacts div:nth-child(2) {
