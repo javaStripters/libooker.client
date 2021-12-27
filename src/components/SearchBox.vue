@@ -13,7 +13,9 @@
 
 <script>
 export default {
-  
+  data: () => ({
+    usersSearchInput: ''
+  }),
 }
 </script>
 
