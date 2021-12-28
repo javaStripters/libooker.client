@@ -26,18 +26,19 @@
           <Button 
             class="booking-confirmation__button" 
             theme="secondary"
-            :onClick="() => selectedSlots = []"
+            :onClick="() => {selectedSlots = []; concantenateSeveralBookingsToOne()}"
           > Отменить все </Button>
           <Button 
             class="booking-confirmation__button" 
             theme="primary"
-            :onClick="() => concantenateSeveralBookingsToOne()"
+            :onClick="() => confirmAllBookings()"
           > Подтвердить все </Button>
         </div>
         <div class="booking-confirmation__items">
+          {{concantenatedSelectedSlots}}
           <div 
             class="booking-confirmation__item"
-            v-for="(slot, index) in selectedSlots"
+            v-for="(slot, index) in concantenatedSelectedSlots"
             :key="index"
           >
             <div class="booking-confirmation__aside">
@@ -144,8 +145,11 @@
                 :onClick="() => {removeBooking(booking.id)}"
               > Отменить </Button>
             </div>
-            <div v-else>
-              Вы отменили эту бронь
+            <div 
+              v-else
+              style="margin-top: 10px; font-weight: 700"
+            >
+              Эта бронь была отменена
             </div>
           </div>
         </div>
@@ -250,6 +254,7 @@ export default {
   data: () => ({
     daysForBooking: [],
     selectedSlots: [],
+    concantenatedSelectedSlots: [],
     usersSearchInput: null,
     countdownTimer: null,
     students: [], 
@@ -287,7 +292,7 @@ export default {
         this.selectedSlots = this.selectedSlots.filter((slot) => {
           if (
             slot.date !== date || 
-            slot.range.from !== range.from || 
+            slot.range.from !== range.from ||
             slot.range.toInclusive !== slot.range.toInclusive
           ) {
             return slot
@@ -300,6 +305,7 @@ export default {
           range
         })
       }
+      this.concantenateSeveralBookingsToOne()
     },
     async removeBooking(id) {
       await fetch(`${this.$store.state.server}/bookings/${id}`, {
@@ -349,11 +355,10 @@ export default {
           i++
         }
       }
-      this.selectedSlots = slots
-      this.confirmAllBookings()
+      this.concantenatedSelectedSlots = slots
     },
     confirmAllBookings() {
-      this.selectedSlots.forEach( slot => {
+      this.concantenatedSelectedSlots.forEach( slot => {
         fetch(`${this.$store.state.server}/bookings?from=${slot.date.toISOString().slice(0, 10)}T${slot.range.from}Z&to=${slot.date.toISOString().slice(0, 10)}T${slot.range.toInclusive}Z`, {
           method: 'POST',
           headers: {
@@ -363,10 +368,11 @@ export default {
         })
         .then(res => res.json())
         .then(res => {
-          if ([400].indexOf(res.status) !== -1) {
+          if ([400, 409].indexOf(res.status) !== -1) {
             this.$emit('openNotification', 'error', res.message)
           }
-          this.bookSlot(slot.date, slot.range)
+
+          //this.bookSlot(slot.date, slot.range)
           this.getAvailableTimeForBooking()
 
         })
@@ -382,7 +388,15 @@ export default {
       })
       .then(res => res.json())
       .then(res => {
-        this.bookSlot(date, range)
+        if ([400, 409].indexOf(res.status) !== -1) {
+          this.$emit('openNotification', 'error', res.message)
+          this.selectedSlots = []
+          this.concantenatedSelectedSlots = []
+          console.log(this.concantenatedSelectedSlots)
+        }
+        else {
+          this.bookSlot(date, range)
+        }
         this.getAvailableTimeForBooking()
       })
     },
@@ -417,12 +431,16 @@ export default {
     timer() {
       let endTime = new Date(this.userBookings.active.date + 'T' + this.userBookings.active.endTime)
       let now = new Date()
-      let hours = Math.floor(((endTime.getTime() - now.getTime()) / 1000) / 60 / 60)
-      let minutes = (Math.floor(((endTime.getTime() - now.getTime()) / 1000) / 60 % 60))
-      let seconds = (Math.round(((endTime.getTime() - now.getTime()) / 1000) % 60))
-      this.countdownTimer = `
-        ${hours.toString().length === 1 ? '0' + hours : hours}:${minutes.toString().length === 1 ? '0' + minutes : minutes}:${seconds.toString().length === 1 ? '0' + seconds : seconds}
-        `
+      if (endTime.getTime() - now.getTime() > 0) {
+        let hours = Math.floor(((endTime.getTime() - now.getTime()) / 1000) / 60 / 60)
+        let minutes = (Math.floor(((endTime.getTime() - now.getTime()) / 1000) / 60 % 60))
+        let seconds = (Math.round(((endTime.getTime() - now.getTime()) / 1000) % 60))
+        this.countdownTimer = `${hours.toString().length === 1 ? '0' + hours : hours}:${minutes.toString().length === 1 ? '0' + minutes : minutes}:${seconds.toString().length === 1 ? '0' + seconds : seconds}`
+      }
+      else {
+        this.countdownTimer = 'Ваша бронь закончилась'
+      }
+      
     },
     getStudents(val) {
       fetch(`${this.$store.state.server}/admin/user-search?query=${val}`, {
@@ -435,12 +453,10 @@ export default {
       })
       .then( res => res.json())
       .then( res => {
-        console.log(res)
         this.students = res
       })
     },
     getChoosedUserBookings(userId) {
-      console.log('Im working')
       fetch(`${this.$store.state.server}/bookings/user/${userId}`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
@@ -450,8 +466,6 @@ export default {
       .then( res => {
         this.choosedUser.bookings = []
         this.choosedUser.bookings = res.content.filter( booking => {
-          console.log(booking.canceled)
-          console.log(booking)
           return booking.canceled === false
         })
       })
@@ -465,7 +479,6 @@ export default {
       })
       .then(res => res.json())
       .then( res => {
-        console.log(res)
         if ([404, 409].indexOf(res.status) !== -1) {
           this.$emit('openNotification', 'error', res.message)
         }
@@ -481,7 +494,6 @@ export default {
       })
       .then(res => res.json())
       .then( res => {
-        console.log(res)
         if ([404, 409].indexOf(res.status) !== -1) {
           this.$emit('openNotification', 'error', res.message)
         }

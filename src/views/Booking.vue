@@ -68,7 +68,6 @@ export default {
         const today = now.toISOString().slice(0, 10)
         const currentTime = now.toLocaleString('ru-RU').split(',')[1]
         this.userBookings.future = []
-        console.log(res.content)
         res.content.forEach(booking => {
           if (booking.date.slice(0, 10) === today && (+booking.timeRange.from.replaceAll(':', '') < +currentTime.replaceAll(':', '') && +booking.timeRange.toInclusive.replaceAll(':', '') > +currentTime.replaceAll(':','') )) {
             if (!booking.finishedManually) {this.userBookings.active = booking}
@@ -79,6 +78,18 @@ export default {
           }
           else {
             this.userBookings.future.push(booking)
+          }
+        })
+        this.userBookings.future.sort( (a, b) => {
+          if (a.canceled !== b.canceled) {
+            return a.canceled - b.canceled
+
+          }
+          else if ((new Date(a.date)).getTime() !== (new Date(b.date)).getTime()){
+            return (new Date(a.date)).getTime() - (new Date(b.date)).getTime()
+          }
+          else {
+            return +a.startTime.replaceAll(':', '') - +b.startTime.replaceAll(':', '')
           }
         })
       })
