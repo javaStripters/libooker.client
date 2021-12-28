@@ -15,7 +15,7 @@
     </div>
     <div 
       class="booking-confirmation"
-      v-if="$store.state.userInfo.role === 'STUDENT' && selectedSlots.length !== 0"
+      v-if="$store.state.userInfo.role === 'STUDENT' && concantenatedSelectedSlots.length !== 0"
     >
       
       <div class="booking-confirmation__content">
@@ -127,7 +127,7 @@
             :key="index"
           >
             <div class="sessions__item-booking-date">
-              <div>Дата Вашего брони:</div>
+              <div>Дата Вашей брони:</div>
               <div>{{booking.date}}</div>
             </div>
             <div class="sessions__item-booking-time">
@@ -370,7 +370,8 @@ export default {
           if ([400, 409].indexOf(res.status) !== -1) {
             this.$emit('openNotification', 'error', res.message)
           }
-
+          this.selectedSlots = []
+          this.concantenatedSelectedSlots = []
           //this.bookSlot(slot.date, slot.range)
           this.getAvailableTimeForBooking()
 
