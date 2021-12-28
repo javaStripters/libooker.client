@@ -6,7 +6,7 @@
       <div class="statistics__title">СТАТИСТИКА</div>
       <div class="statistics__main">
         <div class="statistics__time">
-          <div class="statistics__header">
+          <!-- <div class="statistics__header">
             <div class="statistics__filters">
               <div 
                 class="statistics__filter"
@@ -20,23 +20,23 @@
             <button class="statistics__download-btn">
               <img :src="require('@/assets/icons/download-icon.svg')" alt="">
             </button>
-          </div>
+          </div> -->
           <div class="statistics__body">
             <div class="statistics__card">
               <div>
-                <div>{{}}</div>
+                <div>{{overallStatistics.sumHours}}</div>
                 <div>Время всех комп-ов</div>
               </div>
               <div>
-                <div>{{}}</div>
+                <div>{{overallStatistics.visitors}}</div>
                 <div>Кол-во посетивших</div>
               </div>
               <div>
-                <div>{{}}</div>
+                <div>{{overallStatistics.avgSessionMin}}</div>
                 <div>Ср. время 1 комп-а</div>
               </div>
               <div>
-                <div>{{}}</div>
+                <div>{{overallStatistics.cancelled}}</div>
                 <div>Кол-во отмен. записей</div>
               </div>
             </div>
@@ -45,18 +45,18 @@
               <ApexCharts 
                 type="bar" 
                 width="100%"
-                :options="data.chartOptions" 
-                :series="data.series"
+                :options="visitScheduleChart.chartOptions" 
+                :series="visitScheduleChart.series"
               />
             </div>
             <div class="statistics__card">
               <div style="padding: 16px; font-weight: 700">Максимальная загруженность зала</div>
-              <ApexCharts 
+              <!-- <ApexCharts 
                 type="bar" 
                 width="100%"
-                :options="data.chartOptions" 
-                :series="data.series"
-              />
+                :options="visitSheduleChart.chartOptions" 
+                :series="visitSheduleChart.series"
+              /> -->
             </div>
           </div>
         </div>
@@ -90,93 +90,112 @@ import SearchBox from '@/components/SearchBox.vue'
 import ApexCharts from 'vue-apexcharts'
 export default {
   data: () => ({
-    data: {
-          
-          series: [{
-            name: 'Inflation',
-            data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
-          }],
-          chartOptions: {
-            chart: {
-              height: 250,
-              type: 'bar',
-            },
-            plotOptions: {
-              bar: {
-                dataLabels: {
-                  position: 'top', // top, center, bottom
-                },
-              }
-            },
-            legend: {
-              show: false
-            },
-            dataLabels: {
-              enabled: false,
-              formatter: function (val) {
-                return val + "%";
-              },
-              offsetY: -20,
-              style: {
-                fontSize: '12px',
-                colors: ["#304758"]
-              }
-            },
-            
-            xaxis: {
-              categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-              position: 'top',
-              axisBorder: {
-                show: false
-              },
-              axisTicks: {
-                show: false
-              },
-              // crosshairs: {
-              //   fill: {
-              //     type: 'gradient',
-              //     gradient: {
-              //       colorFrom: '#D8E3F0',
-              //       colorTo: '#BED1E6',
-              //       stops: [0, 100],
-              //       opacityFrom: 0.4,
-              //       opacityTo: 0.5,
-              //     }
-              //   }
-              // },
-              tooltip: {
-                enabled: true,
-              }
-            },
-            yaxis: {
-              axisBorder: {
-                show: false
-              },
-              axisTicks: {
-                show: false,
-              },
-              labels: {
-                show: true,
-                formatter: function (val) {
-                  return val + "%";
-                }
-              }
-            
-            },
-            // title: {
-            //   text: 'Monthly Inflation in Argentina, 2002',
-            //   floating: true,
-            //   offsetY: 330,
-            //   align: 'center',
-            //   style: {
-            //     color: '#444'
-            //   }
-            // }
-          },
-          
-          
+    datesForStatistics: {
+      start: '2021-12-29',
+      end: '2021-12-29'
+    },
+    overallStatistics: {
+      avgSessionMin: 0,
+      cancelled: 0,
+      sumHours: 0,
+      visitors: 0,
+    },
+    visitScheduleChart: {
+      series: [{
+        name: 'Количество человек',
+        data: []
+      }],
+      chartOptions: {
+        chart: {
+          height: 250,
+          type: 'bar',
         },
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              position: 'top', // top, center, bottom
+            },
+          }
+        },
+        legend: {
+          show: false
+        },
+        dataLabels: {
+          enabled: false,
+          formatter: function (val) {
+            return val + "%";
+          },
+          offsetY: -20,
+          style: {
+            fontSize: '12px',
+            colors: ["#304758"]
+          }
+        },
+        xaxis: {
+          categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+          position: 'top',
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false
+          },
+          tooltip: {
+            enabled: true,
+          }
+        },
+        yaxis: {
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false,
+          },
+          labels: {
+            show: true,
+            formatter: function (val) {
+              return val + "%";
+            }
+          }
+        },
+      },
+    },
   }),
+  methods: {
+    getOverallStatisticsData() {
+      const dates = this.datesForStatistics
+      fetch(`${this.$store.state.server}/admin/stats/overall?from=${dates.start}&to=${dates.end}`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+        }
+      })
+      .then( res => res.json())
+      .then( res => {
+        console.log(res)
+        this.overallStatistics = res
+      })
+    },
+    getVisitScheduleData() {
+      fetch(`${this.$store.state.server}/admin/stats/visits`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+        }
+      })
+      .then( res => res.json())
+      .then( res => {
+        console.log(res)
+      })
+    }
+  },
+  mounted() {
+    const now = new Date()
+    this.datesForStatistics = {
+      start: now.toISOString().slice(0, 10),
+      end: now.toISOString().slice(0, 10)
+    } 
+    this.getOverallStatisticsData()
+    this.getVisitScheduleData()
+  },
   components: {
     Container,
     SearchBox,

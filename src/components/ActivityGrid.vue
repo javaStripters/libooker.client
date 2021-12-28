@@ -26,18 +26,19 @@
 }
 .activity-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 16px);
-  grid-auto-rows: 16px;
+  grid-template-rows: repeat(7, 14px);
+  grid-auto-columns: 14px;
+  grid-auto-flow: column;
   gap: 4px;
   align-items: center;
   justify-items: center;
 }
 .activity-grid__cell {
-  border-radius: 1px;
+  border-radius: 3px;
   background: #c4c4c4;
   transition: 0.3s all;
-  height: 16px;
-  width: 16px;
+  height: 14px;
+  width: 14px;
 }
 .activity-grid__cell:hover {
   background: #dddddd;

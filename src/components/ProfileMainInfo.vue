@@ -47,7 +47,11 @@ export default {
   props: [
     'info'
   ],
-
+  watch: {
+    info() {
+      console.log(this.info)
+    }
+  },
   computed: {
     userRole() {
       return localStorage.userRole

@@ -15,21 +15,21 @@
           <div class="profile__divider"></div>
           <div class="profile__statistics">
             <div class="profile__statistics-item">
-              <div>{{}}</div>
+              <div>{{userStatistics.hours}}</div>
               <div>часов брони</div>
             </div>
             <div class="profile__statistics-item">
-              <div>{{}}</div>
+              <div>{{userStatistics.activeBookings}}</div>
               <div>активных броней</div>
             </div>
             <div class="profile__statistics-item">
-              <div>{{}}</div>
+              <div>{{userStatistics.closedSessions}}</div>
               <div>закрытых броней</div>
             </div>
-            <div class="profile__statistics-item">
+            <!-- <div class="profile__statistics-item">
               <div>{{}}</div>
               <div>замечаний</div>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -53,8 +53,30 @@ export default {
       firstname: null,
       patronymic: null,
       testbook: null
+    },
+    userStatistics: {
+      activeBookings: 0,
+      closedSessions: 0,
+      hours: 0,
     }
   }),
+  methods: {
+    getUserStatistics() {
+      fetch(`${this.$store.state.server}/users/statistic`, {
+        headers: {
+          "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`,
+        },
+      })
+      .then( res => res.json())
+      .then( res => {
+        console.log(res)
+        this.userStatistics = res
+      })
+    },
+    updateUserInfo() {
+      this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    }
+  },
   computed: {
     username() {
       return localStorage.username
@@ -64,15 +86,9 @@ export default {
     }
   },
   mounted() {
-    this.userInfo = {
-      id: null,
-      username: localStorage.username,
-      role: localStorage.userRole,
-      lastname: this.$store.state.userInfo.lastname,
-      firstname: this.$store.state.userInfo.firstname,
-      patronymic: this.$store.state.userInfo.patronymic,
-      testbook: this.$store.state.userInfo.testbook
-    }
+    this.getUserStatistics()
+    this.updateUserInfo()
+
   },
   components: {
     Container,
@@ -98,6 +114,10 @@ export default {
   grid-template-columns: 270px auto;
   gap: 16px;
   align-items: start;
+  overflow-x: auto;
+}
+.profile__body::-webkit-scrollbar {
+  display: none;
 }
 
 

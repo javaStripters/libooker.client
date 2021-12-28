@@ -363,8 +363,12 @@ export default {
         })
         .then(res => res.json())
         .then(res => {
+          if ([400].indexOf(res.status) !== -1) {
+            this.$emit('openNotification', 'error', res.message)
+          }
           this.bookSlot(slot.date, slot.range)
           this.getAvailableTimeForBooking()
+
         })
       })
     },

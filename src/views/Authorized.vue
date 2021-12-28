@@ -81,6 +81,7 @@ export default {
       .then(res => {
         this.$store.state.userInfo = res
         localStorage.userRole = res.role
+        localStorage.setItem('userInfo', JSON.stringify(res))
       }) 
     }
   },
