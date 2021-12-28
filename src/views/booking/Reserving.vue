@@ -314,6 +314,7 @@ export default {
         }
       })
       this.$emit('getUserBookings')
+      this.getAvailableTimeForBooking()
     },
     isSelected(date, interval) {
       for (let i = 0; i < this.selectedSlots.length; i++) {
@@ -564,6 +565,7 @@ export default {
     font-size: 14px;
   }
   .sessions__active-wrap {
+    display: none;
   }
   .sessions__active-popup {
     position: absolute;
