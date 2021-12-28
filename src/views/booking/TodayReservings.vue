@@ -57,7 +57,7 @@ export default {
     ]
   }),
   methods: {
-    getTodayBookings(type) {
+    getTodayBookings(type) {  
       this.todayBookings = []
       fetch(`${this.$store.state.server}/bookings/today/${type}`, {
         headers: {
@@ -72,7 +72,7 @@ export default {
   },
 
   mounted() {
-    this.getTodayBookings()
+    this.getTodayBookings(this.choosedFilter)
   },
 
   components: {

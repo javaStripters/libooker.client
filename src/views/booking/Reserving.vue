@@ -185,7 +185,7 @@
           <div 
             class="user__avatar--checked"
             v-if="user.username === choosedUser.username"
-            @click="choosedUser.username = null"
+            @click="() => {choosedUser.username = null; choosedUser.bookings = []}"
           >
             <img :src="require('@/assets/icons/checked-icon.svg')" alt="">
           </div>
