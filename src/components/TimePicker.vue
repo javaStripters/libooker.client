@@ -99,7 +99,7 @@
             class="time-picker__slot time-picker__slot--closed"
             v-else-if="interval.state === 'PASSED'"
           >
-            Прошедшее
+            Прошло
           </div>
         </div>
       </div>

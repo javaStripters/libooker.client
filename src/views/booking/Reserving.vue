@@ -335,7 +335,7 @@ export default {
           return a.date - b.date
         }
         else if (a.range.from !== b.range.from) {
-          return +a.range.from.split(':').slice(0, 1).join('') - +b.range.from.split(':').slice(0, 1).join('')
+          return +a.range.from.replaceAll(':', '') - +b.range.from.replaceAll(':', '') 
         }
       })
       let i = 0

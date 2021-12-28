@@ -30,13 +30,14 @@ export default {
   methods: {
     getArchiveTickets() {
       this.archivedBookings = []
-      fetch(`${this.$store.state.server}/bookings/user/archive?page=0&size=20&sort=`, {
+      fetch(`${this.$store.state.server}/bookings/user/archive?page=0&size=20&sort=date,startTime,endTime,desc`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
         },
       })
       .then( res => res.json())
       .then( res => {
+        console.log(res.content)
         this.archivedBookings = res.content
       })
     }
