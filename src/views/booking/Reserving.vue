@@ -35,7 +35,6 @@
           > Подтвердить все </Button>
         </div>
         <div class="booking-confirmation__items">
-          {{concantenatedSelectedSlots}}
           <div 
             class="booking-confirmation__item"
             v-for="(slot, index) in concantenatedSelectedSlots"
