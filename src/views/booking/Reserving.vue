@@ -476,7 +476,6 @@ export default {
         },
         method: 'DELETE'
       })
-      .then(res => res.json())
       .then( res => {
         if ([404, 409].indexOf(res.status) !== -1) {
           this.$emit('openNotification', 'error', res.message)
