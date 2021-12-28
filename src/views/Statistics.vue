@@ -24,7 +24,7 @@
           <div class="statistics__body">
             <div class="statistics__card">
               <div>
-                <div>{{overallStatistics.sumHours}}</div>
+                <div>{{overallStatistics.sumHours}} ч.</div>
                 <div>Время всех комп-ов</div>
               </div>
               <div>
@@ -32,7 +32,7 @@
                 <div>Кол-во посетивших</div>
               </div>
               <div>
-                <div>{{overallStatistics.avgSessionMin}}</div>
+                <div>{{overallStatistics.avgSessionMin}} мин.</div>
                 <div>Ср. время 1 комп-а</div>
               </div>
               <div>
@@ -41,26 +41,28 @@
               </div>
             </div>
             <div class="statistics__card">
-              <div style="padding: 16px; font-weight: 700">График посещения людей</div>
+              <div style="padding: 16px; font-weight: 700">График посещения людей сегодня</div>
               <ApexCharts 
                 type="bar" 
                 width="100%"
+                height="85%"
                 :options="visitScheduleChart.chartOptions" 
                 :series="visitScheduleChart.series"
+                :key="JSON.stringify(visitScheduleChart.series[0].data)"
               />
             </div>
-            <div class="statistics__card">
+            <!-- <div class="statistics__card">
               <div style="padding: 16px; font-weight: 700">Максимальная загруженность зала</div>
-              <!-- <ApexCharts 
+              <ApexCharts 
                 type="bar" 
                 width="100%"
                 :options="visitSheduleChart.chartOptions" 
                 :series="visitSheduleChart.series"
-              /> -->
-            </div>
+              />
+            </div> -->
           </div>
         </div>
-        <div class="statistics__computers">
+        <!-- <div class="statistics__computers">
           <div class="statistics__header">
             <div class="statistics__filters">
               <div 
@@ -77,7 +79,7 @@
           <div class="statistics__body">
             <div class="statistics__card"></div>
           </div>
-        </div>
+        </div> -->
       </div>
     </Container>
   </div>
@@ -107,7 +109,7 @@ export default {
       }],
       chartOptions: {
         chart: {
-          height: 250,
+          height: 50,
           type: 'bar',
         },
         plotOptions: {
@@ -132,7 +134,7 @@ export default {
           }
         },
         xaxis: {
-          categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+          categories: [],
           position: 'top',
           axisBorder: {
             show: false
@@ -154,7 +156,7 @@ export default {
           labels: {
             show: true,
             formatter: function (val) {
-              return val + "%";
+              return val + "";
             }
           }
         },
@@ -176,6 +178,8 @@ export default {
       })
     },
     getVisitScheduleData() {
+      this.visitScheduleChart.series[0].data = []
+      this.visitScheduleChart.chartOptions.xaxis.categories = []
       fetch(`${this.$store.state.server}/admin/stats/visits`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
@@ -183,11 +187,17 @@ export default {
       })
       .then( res => res.json())
       .then( res => {
-        console.log(res)
+        Object.keys(res).forEach( key => {
+          console.log(key, res[key])
+
+          this.visitScheduleChart.series[0].data.push(res[key])
+          this.visitScheduleChart.chartOptions.xaxis.categories.push(key + ':00')
+        })
+        console.log(this.visitScheduleChart)
       })
     }
   },
-  mounted() {
+  mounted() { 
     const now = new Date()
     this.datesForStatistics = {
       start: now.toISOString().slice(0, 10),
@@ -250,8 +260,9 @@ export default {
   border-radius: 10px;
 }
 .statistics__body {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 350px;
   gap: 24px;
   overflow-x: auto;
   overflow-y: hidden;
