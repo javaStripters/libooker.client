@@ -565,7 +565,6 @@ export default {
     font-size: 14px;
   }
   .sessions__active-wrap {
-    display: none;
   }
   .sessions__active-popup {
     position: absolute;

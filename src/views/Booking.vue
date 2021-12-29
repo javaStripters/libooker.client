@@ -70,8 +70,10 @@ export default {
         this.userBookings.future = []
         res.content.forEach(booking => {
           if (booking.date.slice(0, 10) === today && (+booking.timeRange.from.replaceAll(':', '') < +currentTime.replaceAll(':', '') && +booking.timeRange.toInclusive.replaceAll(':', '') > +currentTime.replaceAll(':','') )) {
-            if (!booking.finishedManually && !booking.canceled) {this.userBookings.active = booking}
-            console.log(booking)
+            if (!booking.finishedManually && !booking.canceled) {
+              this.userBookings.active = booking
+              console.log(this.userBookings.active)
+            }
           }
           else if (booking.date.slice(0, 10) === today && +currentTime.replaceAll(':', '') > +booking.timeRange.toInclusive.replaceAll(':', '')) {
             console.log('.')
