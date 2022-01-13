@@ -359,26 +359,31 @@ export default {
       this.concantenatedSelectedSlots = slots
     },
     confirmAllBookings() {
-      this.concantenatedSelectedSlots.forEach( slot => {
-        fetch(`${this.$store.state.server}/bookings?from=${slot.date.toISOString().slice(0, 10)}T${slot.range.from}Z&to=${slot.date.toISOString().slice(0, 10)}T${slot.range.toInclusive}Z`, {
-          method: 'POST',
-          headers: {
-            'Content-type' : 'application/json',
-            "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
-          },
-        })
-        .then(res => res.json())
-        .then(res => {
-          if ([400, 409].indexOf(res.status) !== -1) {
-            this.$emit('openNotification', 'error', res.message)
-          }
-          this.selectedSlots = []
-          this.concantenatedSelectedSlots = []
-          //this.bookSlot(slot.date, slot.range)
-          this.getAvailableTimeForBooking()
+      if (this.concantenatedSelectedSlots.length > 5) {
+        this.$emit('openNotification', 'error', 'Вы не можете бронировать более 5-ти временных промежутков за раз!')
+      }
+      else {
+        this.concantenatedSelectedSlots.forEach( slot => {
+          fetch(`${this.$store.state.server}/bookings?from=${slot.date.toISOString().slice(0, 10)}T${slot.range.from}Z&to=${slot.date.toISOString().slice(0, 10)}T${slot.range.toInclusive}Z`, {
+            method: 'POST',
+            headers: {
+              'Content-type' : 'application/json',
+              "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
+            },
+          })
+          .then(res => res.json())
+          .then(res => {
+            if ([400, 409].indexOf(res.status) !== -1) {
+              this.$emit('openNotification', 'error', res.message)
+            }
+            this.selectedSlots = []
+            this.concantenatedSelectedSlots = []
+            //this.bookSlot(slot.date, slot.range)
+            this.getAvailableTimeForBooking()
 
+          })
         })
-      })
+      }
     },
     confirmCertainBooking(date, range) {
       fetch(`${this.$store.state.server}/bookings?from=${date.toISOString().slice(0, 10)}T${range.from}Z&to=${date.toISOString().slice(0, 10)}T${range.toInclusive}Z`, {
