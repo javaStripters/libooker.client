@@ -17,16 +17,16 @@
       </div>
       <div class="footer__column footer__copyright-and-communities">
         <div class="footer__communities">
-          <a href="">
+          <a href="https://vk.com/cnbrgau">
             <img :src="require('@/assets/icons/vkontakte.svg')" alt="">
           </a>
-          <a href="">
+          <a href="https://twitter.com/cnbrgau">
             <img :src="require('@/assets/icons/twitter.svg')" alt="">
           </a>
-          <a href="">
+          <a href="https://www.instagram.com/timiriazevka/?hl=ru">
             <img :src="require('@/assets/icons/instagram.svg')" alt="">
           </a>
-          <a href="">
+          <a href="http://library.timacad.ru/">
             <img :src="require('@/assets/icons/chrome.svg')" alt="">
           </a>
         </div>

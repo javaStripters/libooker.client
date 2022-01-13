@@ -5,7 +5,7 @@
         <div class="faq__title">Часто задаваемые вопросы</div>
       </div>      
       <div class="faq__body">
-        <!-- <div class="faq__adding-question-form form">
+        <div class="faq__adding-question-form form">
           
           <img 
             class="form__icon"
@@ -22,7 +22,7 @@
           ></textarea>
 
 
-        </div> -->
+        </div> 
         <div class="faq__expansion-panels">
           <ExpansionPanel
             class="faq__expansion-panel"
@@ -102,7 +102,7 @@ export default {
   border-radius: 10px;
   padding: 8px;
   border: none;
-  resize: none;
+  resize: vertical;
 
 }
 .form__question {
