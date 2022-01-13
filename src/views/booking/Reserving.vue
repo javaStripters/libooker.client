@@ -27,7 +27,7 @@
             class="booking-confirmation__button" 
             theme="secondary"
             :onClick="() => {selectedSlots = []; concantenateSeveralBookingsToOne()}"
-          > Отменить все </Button>
+          > Отменить </Button>
           <Button 
             class="booking-confirmation__button" 
             theme="primary"
@@ -48,11 +48,12 @@
                 <div>Выбранное время:</div>
                 <div style="font-weight: 700">{{slot.range.from.slice(0, 5) + '-' + slot.range.toInclusive.slice(0, 5)}}</div>
               </div>
-              <Button 
+              <!-- <Button 
                 class="booking-confirmation__button" 
                 theme="secondary"
                 :onClick="() => {bookSlot(slot.date, slot.range)}"
-              > Отменить </Button>
+              > Отменить </Button> -->
+              <div></div>
               <Button 
                 class="booking-confirmation__button" 
                 theme="primary"
