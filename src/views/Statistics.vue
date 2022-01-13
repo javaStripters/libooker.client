@@ -173,7 +173,6 @@ export default {
       })
       .then( res => res.json())
       .then( res => {
-        console.log(res)
         this.overallStatistics = res
       })
     },
@@ -188,12 +187,10 @@ export default {
       .then( res => res.json())
       .then( res => {
         Object.keys(res).forEach( key => {
-          console.log(key, res[key])
 
           this.visitScheduleChart.series[0].data.push(res[key])
           this.visitScheduleChart.chartOptions.xaxis.categories.push(key + ':00')
         })
-        console.log(this.visitScheduleChart)
       })
     }
   },

@@ -137,9 +137,9 @@ const router = new VueRouter({
   routes
 })
 
- router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
   if (to.fullPath.indexOf('unauthorized') === -1) {
-    if (!localStorage.accessToken) {
+    if (!localStorage.accessToken || localStorage.tokenExpiresTime <= Date.parse(new Date)) {
       next('/unauthorized/login') 
     }
   }
@@ -160,7 +160,7 @@ const router = new VueRouter({
   //    }
   //  }
    next();
- });
+});
 
 /*
 Пироги "штоле": малина, малина и со сливочным сыром и творог;

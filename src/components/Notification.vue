@@ -79,7 +79,6 @@ export default {
 
   methods: {
     logOut() {
-      console.log('logOuting from Notification component')
       this.$store.getters.logOut
       this.$emit('closeNotification')
     }

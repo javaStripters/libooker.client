@@ -399,7 +399,6 @@ export default {
           this.$emit('openNotification', 'error', res.message)
           this.selectedSlots = []
           this.concantenatedSelectedSlots = []
-          console.log(this.concantenatedSelectedSlots)
         }
         else {
           this.bookSlot(date, range)
@@ -512,7 +511,6 @@ export default {
       this.$emit('getUserBookings')
     },
     extentionTime() {
-      console.log(this.extentionTime)
     }
   },
 

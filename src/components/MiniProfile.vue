@@ -26,7 +26,7 @@
       v-else-if="userRole === 'ADMIN'"
     >
       <div 
-        class="mini-profile__username"
+        class="mini-profile__username mini-profile__username--administrator"
       >
         Администратор
       </div>
@@ -60,5 +60,8 @@ export default {
   .mini-profile__username {
     display: flex;
     align-items: center;
+  }
+  .mini-profile__username--administrator {
+    cursor: default;
   }
 </style>

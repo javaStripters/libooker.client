@@ -37,7 +37,6 @@ export default {
       })
       .then( res => res.json())
       .then( res => {
-        console.log(res.content)
         this.archivedBookings = res.content
       })
     }

@@ -31,7 +31,6 @@ export default {
   }),
   methods: {
     login() {
-      console.log(this.username, this.password)
       fetch(`${this.$store.state.server}/auth/sign-in`, {
         method: 'POST',
         headers: {
@@ -44,12 +43,15 @@ export default {
       })
       .then( res => res.json())
       .then( res => {
-        console.log(res)
+        const loginTime = new Date()
+        const tokenExpiresTime = new Date()
+        tokenExpiresTime.setHours(loginTime.getHours() + 24)
         if (res.token && res.tokenHeader) {
           localStorage.accessToken = res.token
           localStorage.tokenHeader = res.tokenHeader
           localStorage.username = this.username
           localStorage.userRole = res.role
+          localStorage.tokenExpiresTime = Date.parse(tokenExpiresTime)
           if (localStorage.userRole === 'STUDENT') {
             this.$router.push('/booking/reserving')
           }
