@@ -57,13 +57,14 @@ export default {
   }),
   methods: {
     getUserBookings() {
-      fetch(`${this.$store.state.server}/bookings/user`, {
+      fetch(`${this.$store.state.server}/bookings/user?size=1000`, {
         headers: {
           "Authorization": `${localStorage.tokenHeader} ${localStorage.accessToken}`
         }
       })
       .then(res => res.json())
       .then(res => {
+        console.log(res)
         const now = new Date()
         const today = now.toISOString().slice(0, 10)
         const currentTime = now.toLocaleString('ru-RU').split(',')[1]
@@ -75,6 +76,7 @@ export default {
             }
           }
           else if (booking.date.slice(0, 10) === today && +currentTime.replaceAll(':', '') > +booking.timeRange.toInclusive.replaceAll(':', '')) {
+
           }
           else {
             this.userBookings.future.push(booking)

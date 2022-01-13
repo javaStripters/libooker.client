@@ -73,7 +73,7 @@
           </div>
           <div
             class="time-picker__slot time-picker__slot--free"
-            v-else-if="userRole === 'ADMIN' && interval.state === 'FREE'"
+            v-else-if="userRole === 'ADMIN' && interval.state === 'FREE' && interval.state"
           >
             Свободно
           </div>
@@ -85,7 +85,7 @@
           </div>
           <div 
             class="time-picker__slot time-picker__slot--self-reserved"
-            v-else-if="interval.state === 'SELF'"
+            v-else-if="interval.state === 'SELF' "
           >
             Ваша бронь
           </div>
