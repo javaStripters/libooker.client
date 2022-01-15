@@ -23,24 +23,24 @@ export default {
   data: () => ({
     navigationButtons: [
       {
-        name: 'Reserving',
+        name: 'reserving',
         goTo: '/booking/reserving',
         text: 'Бронирование'
       },
       {
-        name: 'User Reservations',
+        name: 'user-reservations',
         goTo: '/booking/user-reservations',
         text: 'Мои записи'
       },
     ],
     adminNavigationButtons: [
       {
-        name: 'Reserving',
+        name: 'reserving',
         goTo: '/admin/booking/reserving',
         text: 'Бронирование'
       },
       {
-        name: 'User Reservations',
+        name: 'user-reservations',
         goTo: '/admin/booking/today-reservings',
         text: 'Записи на сегодня'
       },
@@ -64,7 +64,6 @@ export default {
       })
       .then(res => res.json())
       .then(res => {
-        console.log(res)
         const now = new Date()
         const today = now.toISOString().slice(0, 10)
         const currentTime = now.toLocaleString('ru-RU').split(',')[1]

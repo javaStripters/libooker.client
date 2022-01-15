@@ -48,12 +48,11 @@
                 <div>Выбранное время:</div>
                 <div style="font-weight: 700">{{slot.range.from.slice(0, 5) + '-' + slot.range.toInclusive.slice(0, 5)}}</div>
               </div>
-              <!-- <Button 
+              <Button 
                 class="booking-confirmation__button" 
                 theme="secondary"
-                :onClick="() => {bookSlot(slot.date, slot.range)}"
-              > Отменить </Button> -->
-              <div></div>
+                :onClick="() => {unselectCertainBooking(slot.date, slot.range)}"
+              > Отменить </Button>
               <Button 
                 class="booking-confirmation__button" 
                 theme="primary"
@@ -95,10 +94,11 @@
                 </div> 
               </div>
               <div class="sessions__item-actions">
-                <Button
+                <!-- <Button
                   theme="secondary"
                   :onClick="() => {$emit('openNotification', 'showExtendOptionsForBooking')}"
-                > Продлить </Button>  
+                > Продлить </Button>   -->
+                <div></div>
                 <Button
                   theme="danger"
                   :onClick="() => {finishBooking(userBookings.active.id)}"
@@ -255,6 +255,7 @@ export default {
     daysForBooking: [],
     selectedSlots: [],
     concantenatedSelectedSlots: [],
+    selectedIntervals: {},
     usersSearchInput: null,
     countdownTimer: null,
     students: [], 
@@ -348,12 +349,28 @@ export default {
             range: {
               from: slots[i].range.from,
               toInclusive: slots[i + 1].range.toInclusive
-            }
+            },
+            subranges: [],
           }
           slots.splice([i + 1], 1)
         }
         else {
           i++
+        }
+      }
+      for (let concatSlot of slots) {
+        for (let slot of this.selectedSlots) {
+          if (slot.date === concatSlot.date && concatSlot.subranges) {
+            if (
+              +slot.range.from.split(':').join('') >= +concatSlot.range.from.split(':').join('') &&
+              +slot.range.toInclusive.split(':').join('') <= +concatSlot.range.toInclusive.split(':').join('')
+              ) {
+                concatSlot.subranges.push({
+                  from: slot.range.from,
+                  toInclusive: slot.range.toInclusive
+                })
+            }
+          }
         }
       }
       this.concantenatedSelectedSlots = slots
@@ -385,6 +402,15 @@ export default {
         })
       }
     },
+    unselectCertainBooking(date, range) {
+      this.concantenatedSelectedSlots.forEach( slot => {
+        if (slot.date === date && slot.range.from === range.from && slot.range.toInclusive === range.toInclusive) {
+          slot.subranges.forEach( range => {
+            this.bookSlot(slot.date, range)
+          })    
+        }
+      })
+    },
     confirmCertainBooking(date, range) {
       fetch(`${this.$store.state.server}/bookings?from=${date.toISOString().slice(0, 10)}T${range.from}Z&to=${date.toISOString().slice(0, 10)}T${range.toInclusive}Z`, {
         method: 'POST',
@@ -401,7 +427,13 @@ export default {
           this.concantenatedSelectedSlots = []
         }
         else {
-          this.bookSlot(date, range)
+          this.concantenatedSelectedSlots.forEach( slot => {
+            if (slot.date === date && slot.range.from === range.from && slot.range.toInclusive === range.toInclusive) {
+              slot.subranges.forEach( range => {
+                this.bookSlot(slot.date, range)
+              })    
+            }
+          })
         }
         this.getAvailableTimeForBooking()
       })
@@ -502,6 +534,8 @@ export default {
         if ([404, 409].indexOf(res.status) !== -1) {
           this.$emit('openNotification', 'error', res.message)
         }
+        this.$emit('getUserBookings')
+        this.getAvailableTimeForBooking()
       })
     },
   },

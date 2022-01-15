@@ -32,39 +32,39 @@ export default {
       //   text: 'Главная'
       // },
       {
-        name: 'Booking',
+        name: 'booking',
         goTo: '/booking/reserving',
         text: 'Бронирование'
       },
       {
-        name: 'Archive',
+        name: 'archive',
         goTo: '/archive',
         text: 'Архив'
       },
       {
-        name: 'FAQ',
+        name: 'faq',
         goTo: '/faq',
         text: 'FAQ'
       },
     ],
     adminNavigationButtons: [
       {
-        name: 'Booking',
+        name: 'booking',
         goTo: '/admin/booking/reserving',
         text: 'Бронирование'
       },
       {
-        name: 'Statistics',
+        name: 'statistics',
         goTo: '/admin/statistics',
         text: 'Статистика'
       },
       {
-        name: 'Users',
+        name: 'users',
         goTo: '/admin/users/students',
         text: 'Пользователи'
       },
       {
-        name: 'FAQ',
+        name: 'faq',
         goTo: '/admin/faq',
         text: 'FAQ'
       },

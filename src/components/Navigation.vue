@@ -9,7 +9,7 @@
           class="navigation__item"
           v-for="button in buttons"
           :key="button.name"
-          :class="$route.path.indexOf(button.goTo) !== -1 ? 'navigation__item--choosed' : 'navigation__item--unchoosed'"
+          :class="$route.path.indexOf(button.name) !== -1 ? 'navigation__item--choosed' : 'navigation__item--unchoosed'"
           :to="button.goTo"
         >
           {{button.text}}
@@ -26,10 +26,9 @@ export default {
     'theme' /* String: 'primary', 'secondary' */,
     'buttons' /* Array */,
   ],
-
   components: {
     Container,
-  }
+  },
 }
 </script>
 

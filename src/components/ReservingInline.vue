@@ -12,16 +12,16 @@
     >{{`${booking.user.lastname} ${booking.user.firstname}` }}</div>
     <div class="reserving__computer-number">Компьютер: {{booking.workplace.name}}</div>
     <div class="reserving__date">Дата: {{booking.date.split('-').reverse().join('.')}}г.</div>
-    <div class="reserving__week-day">День недели: {{}}</div>
+    <!-- <div class="reserving__week-day">День недели: {{}}</div> -->
     <div class="reserving__time">Начало/конец брони: {{`${booking.startTime.slice(0, 5)}-${booking.endTime.slice(0, 5)}`}}</div>
-    <div class="reserving__actions"> 
+    <!-- <div class="reserving__actions"> 
       <Button
         theme="danger"
         :onClick="() => {}"
       >
         Отменить
       </Button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -48,7 +48,8 @@ export default {
   padding: 4px 16px;
 
   display: grid;
-  grid-template-columns: 40px 1fr 140px 120px 200px 250px 1fr;
+  /* grid-template-columns: 40px 1fr 140px 120px 200px 250px 1fr; */
+  grid-template-columns: 40px 1fr 140px 120px 250px;
   gap: 24px;
   align-items: center;
   font-size: 14px;

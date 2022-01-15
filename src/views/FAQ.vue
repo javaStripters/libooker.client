@@ -3,17 +3,16 @@
     <Container class="faq__container">
       <div class="faq__title">Часто задаваемые вопросы</div>
       <div class="faq__expansion-panels">
-        <ExpansionPanel 
-          :title="'Test title'"
-          :body="'Test body. HTML tags are supported here'"
-        />
-        <ExpansionPanel 
-          :title="'Test title'"
-          :body="'Test body. HTML tags are supported here'"
+        <ExpansionPanel
+          class="faq__expansion-panel"
+          v-for="question in 5"  
+          :key="question"
+          :title="'Test title ' + question"
+          :body="`Test body ${question}. HTML tags are supported here.`"
         />
       </div>
 
-      <div class="faq__title">Обратная связь</div>
+      <!-- <div class="faq__title">Обратная связь</div>
       <div class="faq__feedback-form">
         <textarea 
           class="faq__textarea"
@@ -27,7 +26,7 @@
         >
           Отправить
         </Button>
-      </div>
+      </div> -->
     </Container>
   </div>
 </template>

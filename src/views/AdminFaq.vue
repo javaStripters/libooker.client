@@ -5,8 +5,7 @@
         <div class="faq__title">Часто задаваемые вопросы</div>
       </div>      
       <div class="faq__body">
-        <div class="faq__adding-question-form form">
-          
+        <!-- <div class="faq__adding-question-form form">
           <img 
             class="form__icon"
             :src="require('@/assets/icons/question-mark-in-circle.svg')"
@@ -20,9 +19,7 @@
             class="form__answer"
             placeholder="Введите ответ на вопрос"
           ></textarea>
-
-
-        </div> 
+        </div>  -->
         <div class="faq__expansion-panels">
           <ExpansionPanel
             class="faq__expansion-panel"

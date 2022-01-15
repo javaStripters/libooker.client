@@ -62,13 +62,16 @@
           <div 
             class="time-picker__slot time-picker__slot--free"
             :class="[
-              isSelected(day.date, interval.range, selectedSlots) && 'time-picker__slot time-picker__slot--selected'
+              isSelected(day.date, interval.range) && 'time-picker__slot time-picker__slot--selected'
             ]"
             v-if="userRole === 'STUDENT' && interval.state === 'FREE'"
             @click="$emit('bookSlot', day.date, interval.range)"
           >
+            <!-- {{
+              day.date.toISOString()
+            }} -->
             {{
-              isSelected(day.date, interval.range, selectedSlots) ? 'Выбрано' : 'Забронировать'
+              isSelected(day.date, interval.range) ? 'Выбрано' : 'Забронировать'
             }}
           </div>
           <div

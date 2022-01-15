@@ -10,12 +10,15 @@
     </div>
     <div class="user__body">
       <ProfileMainInfo 
+        class="profile__main-info"
         :info="userInfo"
       />
       <div class="profile__activity-and-statistics">
 
-        <ActivityGrid />
-        <div class="profile__divider"></div>
+        
+        <!-- <ActivityGrid /> -->
+        
+        <!-- <div class="profile__divider"></div>  -->
         <div class="profile__statistics">
           <div class="profile__statistics-item">
             <div>{{userStatistics.hours}}</div>
@@ -34,14 +37,17 @@
             <div>замечаний</div>
           </div> -->
         </div>
+        
       </div>
       <div class="profile__user-reservings">
-        <ReservingInline 
-          v-for="(booking, index) in bookings"
-          :key="index"
-          :booking="booking"
-        />
-      </div>
+          <div class="profile__title">Брони пользователя</div>
+          <ReservingInline 
+            v-for="(booking, index) in bookings"
+            :key="index"
+            :booking="booking"
+          />
+          <div v-if="bookings.length === 0">У пользователя нет броней на ближайшее время</div>
+        </div>
     </div>
 
   </div>
@@ -133,6 +139,14 @@ export default {
   align-items: start;
   overflow-x: auto;
 }
+.profile__main-info {
+  grid-row: 1 / 4;
+}
+.profile__title {
+  align-self: flex-start;
+  font-size: 16px;
+  font-weight: 700;
+}
 .profile__activity-and-statistics {
   background: #FEFEFE;
   box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.12);
@@ -169,7 +183,6 @@ export default {
   box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.12);
   border-radius: 10px;
   padding: 16px 20px;
-  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
   align-items: center;

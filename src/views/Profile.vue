@@ -11,8 +11,8 @@
           
 
         <div class="profile__activity-and-statistics">
-          <ActivityGrid />
-          <div class="profile__divider"></div>
+          <!-- <ActivityGrid /> -->
+          <!-- <div class="profile__divider"></div> -->
           <div class="profile__statistics">
             <div class="profile__statistics-item">
               <div>{{userStatistics.hours}}</div>
