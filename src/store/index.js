@@ -4,10 +4,12 @@ import router from '@/router'
 
 Vue.use(Vuex)
 
+import {server} from './server.js'
+
 export default new Vuex.Store({
   state: {
     isAuthorized: false,
-    server: 'https://thecntgfy.ru',
+    server: server || 'https://thecntgfy.ru',
     currentDate: (new Date()).toISOString('en-US'),
     accessToken: null,
     tokenHeader: null,
