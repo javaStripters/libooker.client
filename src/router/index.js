@@ -125,10 +125,10 @@ const routes = [
       }
     ]
   },
-  // {
-  //   path: '*',
-  //   redirect: '/booking'
-  // }
+  {
+    path: '*',
+    redirect: '/booking/reserving'
+  }
 ]
 
 const router = new VueRouter({
