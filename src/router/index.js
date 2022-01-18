@@ -141,7 +141,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   console.log(localStorage.tokenExpiresTime)
   if (to.fullPath.indexOf('unauthorized') === -1) {
-    if (!localStorage.accessToken || +localStorage.tokenExpiresTime <= Date.parse(new Date)) {
+    if (!localStorage.accessToken || !+localStorage.tokenExpiresTime || +localStorage.tokenExpiresTime <= Date.parse(new Date)) {
+      localStorage.clear()
       next('/unauthorized/login') 
     }
   }
