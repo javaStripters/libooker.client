@@ -27,6 +27,7 @@ const routes = [
     path: '/',
     name: 'Authorized',
     component: () => import('../views/Authorized.vue'),
+    redirect: '/booking/reserving',
     // beforeEnter: store.state.isAuthorized,
     children: [
       {
@@ -125,10 +126,10 @@ const routes = [
       }
     ]
   },
-  // {
-  //   path: '*',
-  //   redirect: '/booking'
-  // }
+  {
+    path: '*',
+    redirect: '/booking/reserving'
+  }
 ]
 
 const router = new VueRouter({
@@ -138,8 +139,14 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(localStorage.tokenExpiresTime)
   if (to.fullPath.indexOf('unauthorized') === -1) {
-    if (!localStorage.accessToken || localStorage.tokenExpiresTime <= Date.parse(new Date)) {
+    if (
+         !localStorage.accessToken 
+      || !+localStorage.tokenExpiresTime 
+      || +localStorage.tokenExpiresTime <= Date.parse(new Date)
+    ) {
+      localStorage.clear()
       next('/unauthorized/login') 
     }
   }
@@ -162,10 +169,4 @@ router.beforeEach((to, from, next) => {
    next();
 });
 
-/*
-Пироги "штоле": малина, малина и со сливочным сыром и творог;
-Кулебяка с мясом.
-2 сытнымх по пол кило, один сладкий (малинад)
-заказать на завтра часов на пять
-*/
 export default router

@@ -1,1 +1,1 @@
-export const server = 'http://193.232.106.183'
+export const server = 'https://thecntgfy.ru'
