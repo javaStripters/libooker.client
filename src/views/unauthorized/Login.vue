@@ -2,6 +2,7 @@
   <div class="login">
     <div class="login__title">Авторизация</div>
     <div class="login__form"> 
+
       <div class="login__lable">Логин</div>
       <input class="login__input" type="text" v-model="username">
       <div class="login__lable">Пароль</div>
@@ -12,9 +13,13 @@
         theme='primary'
         :onClick="() => {login()}"
       >Войти</Button>
+      <div class="login__hint login__hint--sm">
+        Данные для входа: логин и пароль от сети WiFi. <br /> Найти можно в 
+        <a href="https://oas.timacad.ru/stud/default/stud">личном кабинете</a>.
+      </div>
       <div></div>
     </div>
-    <div class="login__hint">
+    <div class="login__hint login__hint--md">
       Нажимая кнопку “Авторизироваться” Вы соглашаетесь с политикой 
       конфеденциальности и принимаете пользовательское соглашение
     </div>
@@ -60,7 +65,7 @@ export default {
           }
         }
         else {
-          window.alert('Some problems are occurred')
+          window.alert('Не удалось выполнить вход. Проверьте данные и попробуйте еще раз.')
         }
       })
     }
@@ -117,10 +122,15 @@ export default {
     font-size: 24px;
   }
   .login__hint {
+    align-self: center;
     text-align: center;
     width: 90%;
     max-width: 450px;
-    margin-top: 10px;
+  }
+  .login__hint--sm {
+  }
+  .login__hint--md {
     line-height: 25px;
+    margin-top: 10px;
   }
 </style>
