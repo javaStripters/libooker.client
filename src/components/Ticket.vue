@@ -34,6 +34,7 @@
           <span>Лиственичная аллея, 2, корп. 1</span>
         </div>
       </div>
+      <!--
       <div 
         class="ticket__actions"
         v-if="type === 'actual'"
@@ -49,6 +50,7 @@
         :onClick="() => {}"
         > Скачать </Button>
       </div>
+      -->
     </div> 
   </div>
 </template>
