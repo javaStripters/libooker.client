@@ -162,6 +162,39 @@
       </div>
     </div>
     
+    
+
+    <div 
+      class="user-bookings"
+      v-if="$store.state.userInfo.role === 'ADMIN' && choosedUser.bookings.length !== 0"
+    >
+      <div class="user-bookings__title">Подтвердите Ваш выбор</div>
+      <div class="user-bookings__tickets">
+        <div 
+          class="user-bookings__ticket mini-ticket"
+          v-for="(booking, index) in choosedUser.bookings"
+          :key="index"
+        >
+          <div class="mini-ticket__aside">{{booking.date.split('-')[2]}}</div>
+          <div class="mini-ticket__body">
+            <div class="mini-ticket__info-item">
+              <div>Выбранное время:</div>
+              <div>{{`${booking.startTime.slice(0, 5)}-${booking.endTime.slice(0, 5)}`}}</div>
+            </div>
+            <div class="mini-ticket__actions">
+              <div></div>
+              <Button
+                class="mini-ticket__button"
+                theme="danger"
+                :onClick="() => {cancelBooking(booking.id)}"
+              >
+                Отменить запись
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       class="reserving__users-search users-search"
       v-if="$store.state.userInfo.role === 'ADMIN'"
@@ -203,38 +236,6 @@
             <div class="user__info-item">
               <div>Логин: </div>
               <div>{{user.username}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div 
-      class="user-bookings"
-      v-if="$store.state.userInfo.role === 'ADMIN' && choosedUser.bookings.length !== 0"
-    >
-      <div class="user-bookings__title">Подтвердите Ваш выбор</div>
-      <div class="user-bookings__tickets">
-        <div 
-          class="user-bookings__ticket mini-ticket"
-          v-for="(booking, index) in choosedUser.bookings"
-          :key="index"
-        >
-          <div class="mini-ticket__aside">{{booking.date.split('-')[2]}}</div>
-          <div class="mini-ticket__body">
-            <div class="mini-ticket__info-item">
-              <div>Выбранное время:</div>
-              <div>{{`${booking.startTime.slice(0, 5)}-${booking.endTime.slice(0, 5)}`}}</div>
-            </div>
-            <div class="mini-ticket__actions">
-              <div></div>
-              <Button
-                class="mini-ticket__button"
-                theme="danger"
-                :onClick="() => {cancelBooking(booking.id)}"
-              >
-                Отменить запись
-              </Button>
             </div>
           </div>
         </div>

@@ -26,7 +26,7 @@
       <div class="ticket__computer-number-and-address">
         <div>
           <div class="ticket__computer-number">Компьютер № {{info.workplace.name}}</div>
-          <div style="line-height: 16px; font-size: 14px">2 этаж, компьютерный класс №2</div>
+          <div style="line-height: 16px; font-size: 14px">2 этаж, комн. №205, студенческий читальный зал</div>
         </div>
         <img :src="require('@/assets/computer.svg')" alt="" class="ticket__image">
         <div class="ticket__address">
