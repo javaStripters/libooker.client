@@ -5,10 +5,10 @@
       <div class="faq__expansion-panels">
         <ExpansionPanel
           class="faq__expansion-panel"
-          v-for="question in 5"  
-          :key="question"
-          :title="'Test title ' + question"
-          :body="`Test body ${question}. HTML tags are supported here.`"
+          v-for="point in $store.state.faqPoints"  
+          :key="point.question"
+          :title="point.question"
+          :body="point.answer"
         />
       </div>
 

@@ -16,6 +16,20 @@ export default new Vuex.Store({
     userRole: null /* String: 'STUDENT', 'ADMIN' */,
     userInfo: {},
     extentionTime: null,
+    faqPoints: [
+      {
+        question: 'Какая максимальная длительность одной брони?',
+        answer: 'Длительность одной брони не может превышать двух часов (120 минут).'
+      },
+      {
+        question: 'Сколько одновременно может быть броней у пользователя?',
+        answer: 'Пользователь не может иметь более пяти броннней одновременно, включая текущую.'
+      },
+      // {
+      //   question: '',
+      //   answer: ''
+      // },
+    ]
   },
   mutations: {
   },
